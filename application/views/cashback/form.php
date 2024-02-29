@@ -8,43 +8,35 @@
 
         <!-- Page Content  -->
         <div id="content">
-            <button type="button" id="sidebarCollapse" class="btn btn-info">
-                <i class="fas fa-align-left"></i>
-                <span>Toggle Sidebar</span>
-            </button>
-            <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-align-justify"></i>
-            </button>
-
             <h2><?php echo $heading_title;?></h2>
             <form method="POST" action="<?php echo $action_url; ?>">
                 <input type="hidden" name="<?php echo $id;?>">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label for="">Card Type</label>
+                        <label for=""><small>Card Type</small></label>
                         <select name="card_type" class="form-control" id="">
                             <option value="">Please Select</option>
                         </select>
                     </div>
                     <div class="col-sm-12">
-                        <label for="">Min Transaction</label>
+                        <label for=""><small>Min Transaction</small></label>
                         <input type="text" name="minimum_transaction_value" class="form-control" placeholder="Minimum Transaction Value">
                     </div>
                     <div class="col-md-6 col-sm-12">
-                        <label for="">Full Payment Cashback</label>
+                        <label for=""><small>Full Payment Cashback</small></label>
                         <input type="text" name="full_payment_cashback_value" class="form-control format-currency" placeholder="Full Payment Cashback">
                     </div>
                     <div class="col-md-6 col-sm-12">
-                        <label for="">Installment Cashback</label>
+                        <label for=""><small>Installment Cashback</small></label>
                         <input type="text" name="installment_cashback_value" class="form-control format-currency" placeholder="Installment Cashback Value">
                     </div>
                    
                     <div class="col-md-6 col-sm-12">
-                        <label for="">Total Quota</label>
+                        <label for=""><small>Total Quota</small></label>
                         <input type="number" name="total_quota" class="form-control" placeholder="Total Quota">
                     </div>
                     <div class="col-md-6 col-sm-12">
-                        <label for="">Max Budget</label>
+                        <label for=""><small>Max Budget</small></label>
                         <input type="text" name="max_budget" class="form-control" placeholder="Max Budget">
                     </div>
                 </div>
