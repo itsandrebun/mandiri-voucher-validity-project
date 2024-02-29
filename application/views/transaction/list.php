@@ -33,41 +33,45 @@
                         </div>
                     </div>
                 </div>
+                <div class="float-right">
+                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i> Filter</button>
+                </div>
             </form>
             
-
-            <table class="table table-condensed table-bordered">
-                <thead>
-                    <tr>
-                        <th class="text-center" style="vertical-align:middle;" rowspan="2">ID Number</th>
-                        <th class="text-center" style="vertical-align:middle;" rowspan="2">Card Number</th>
-                        <th class="text-center" style="vertical-align:middle;" rowspan="2">Customer Name</th>
-                        <th class="text-center" style="vertical-align:middle;" rowspan="2">Customer Phone Number</th>
-                        <th class="text-center" style="vertical-align:middle;" rowspan="2">Customer Email</th>
-                        <th class="text-center" style="vertical-align:middle;" rowspan="2">Card Type</th>
-                        <th class="text-center" style="vertical-align:middle;" rowspan="2">Payment Type</th>
-                        <th class="text-center" style="vertical-align:middle;" rowspan="2">Transaction Amount</th>
-                        <th class="text-center" style="vertical-align:middle;" rowspan="2">Cashback Amount</th>
-                        <th class="text-center" style="vertical-align:middle"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="text-center" style="vertical-align:middle;">8379379327329872398</td>
-                        <td class="text-center" style="vertical-align:middle;">4349384098430984309</td>
-                        <td class="text-center" style="vertical-align:middle;">Andre Bun</td>
-                        <td class="text-center" style="vertical-align:middle;">6282737388282</td>
-                        <td class="text-center" style="vertical-align:middle;">marsin.bun@antavaya.com</td>
-                        <td class="text-center" style="vertical-align:middle;">Prioritas</td>
-                        <td class="text-center" style="vertical-align:middle;">Full Payment</td>
-                        <td class="text-center" style="vertical-align:middle;"><?php echo number_format(20000000,0,",",".");?></td>
-                        <td class="text-right" style="vertical-align:middle;"><?php echo number_format(2000000,0,",",".");?></td>
-                        <td class="text-center" style="vertical-align:middle">
-                            <a href="">Print</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-condensed table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="vertical-align:middle;" rowspan="2">ID Number</th>
+                            <th class="text-center" style="vertical-align:middle;" rowspan="2">Card Number</th>
+                            <th class="text-center" style="vertical-align:middle;" rowspan="2">Customer Name</th>
+                            <th class="text-center" style="vertical-align:middle;" rowspan="2">Customer Phone Number</th>
+                            <th class="text-center" style="vertical-align:middle;" rowspan="2">Customer Email</th>
+                            <th class="text-center" style="vertical-align:middle;" rowspan="2">Card Type</th>
+                            <th class="text-center" style="vertical-align:middle;" rowspan="2">Payment Type</th>
+                            <th class="text-center" style="vertical-align:middle;" rowspan="2">Transaction Amount</th>
+                            <th class="text-center" style="vertical-align:middle;" rowspan="2">Cashback Amount</th>
+                            <th class="text-center" style="vertical-align:middle"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center" style="vertical-align:middle;">8379379327329872398</td>
+                            <td class="text-center" style="vertical-align:middle;">4349384098430984309</td>
+                            <td class="text-center" style="vertical-align:middle;">Andre Bun</td>
+                            <td class="text-center" style="vertical-align:middle;">6282737388282</td>
+                            <td class="text-center" style="vertical-align:middle;">marsin.bun@antavaya.com</td>
+                            <td class="text-center" style="vertical-align:middle;">Prioritas</td>
+                            <td class="text-center" style="vertical-align:middle;">Full Payment</td>
+                            <td class="text-center" style="vertical-align:middle;"><?php echo number_format(20000000,0,",",".");?></td>
+                            <td class="text-right" style="vertical-align:middle;"><?php echo number_format(2000000,0,",",".");?></td>
+                            <td class="text-center" style="vertical-align:middle">
+                                <a href="">Print</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -84,8 +88,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <span>Data has been successfully inserted!</span>
-                    <span></span>
+                    <span><?php echo $this->session->flashdata('success');?></span>
                 </div>                    
             </div>
         </div>
