@@ -249,8 +249,8 @@ a.article:hover {
     width: 100%;
 }
 
-.error_messages{
-	color: red !important;;
+#error_messages span{
+	color: red !important;
 }
 
 /* ---------------------------------------------------

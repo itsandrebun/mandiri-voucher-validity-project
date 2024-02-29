@@ -48,7 +48,7 @@ class Transaction extends Mandiri_Controller {
         $this->form_validation->set_rules('id_number', 'ID Number', 'required');
 		$this->form_validation->set_rules('id_number', 'ID Number', 'required|callback_validate_id_number');
 
-        // Tambahkan rules validasi Untuk yang lainnnnnnnnnnnnnnnnnnnnn
+        // Tambahkan rules validasi Untuk yang lain
 
 
 
@@ -106,8 +106,8 @@ class Transaction extends Mandiri_Controller {
 					$this->form_validation->set_message('validate_id_number', 'You can only submit once a day for the same ID Number.');
 					return FALSE;
 				}
-			}else{
-				$this->form_validation->set_message('1', 'You can only submit twice in an exhibition period for the same ID Number.');
+			}elseif (count($transaction_data) > 1) {
+				$this->form_validation->set_message('validate_id_number', 'You can only submit twice in an exhibition period for the same ID Number.');
 				return FALSE;
 			}
 		}
