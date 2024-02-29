@@ -36,15 +36,15 @@
                         <input type="text" id="transaction_nominal" name="transaction_nominal" class="form-control format-currency" placeholder="Transaction Nominal">
                     </div>
 					<div class="col-md-4 col-sm-12">
-					<label for=""><small>Card Type</small></label>
-					<select name="card_type" class="form-control" id="card_type">
-						<option value="">Please Select</option>
-						<option value="1">All Card</option>
-						<option value="2">World Elite</option>
-						<option value="3">Prioritas</option>
-						<option value="4">Signature</option>
-					</select>
-				</div>
+    					<label for=""><small>Card Type</small></label>
+    					<select name="card_type" class="form-control" id="card_type">
+    						<option value="">Please Select</option>
+    						<option value="1">All Card</option>
+    						<option value="2">World Elite</option>
+    						<option value="3">Prioritas</option>
+    						<option value="4">Signature</option>
+    					</select>
+    				</div>
                     <div class="col-md-4 col-sm-12">
                         <label for=""><small>Payment Type</small></label>
                         <select class="form-control" name="payment_type" id="payment_type">
