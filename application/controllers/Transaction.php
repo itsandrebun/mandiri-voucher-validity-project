@@ -6,17 +6,16 @@ class Transaction extends Mandiri_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Customer_details_model');
-        $this->load->model('Cashback_offer_model');
-        $this->load->model('Master_card_type_model');
+        $this->load->model(array('Customer_details_model','Cashback_offer_model','Master_card_type_model'));
         $this->load->helper('url');
         $this->load->library('form_validation');
+        $this->sidebar_id = 3;
     }
 
     public function add(){
         $data['heading_title'] = 'Cashback Voucher Validity';
         $data['sidebars'] = $this->get_sidebar();
-        $data['sidebar_id'] = 3;
+        $data['sidebar_id'] = $this->sidebar_id;
         
         // Mengambil data card type untuk dropdown
         $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
@@ -29,7 +28,7 @@ class Transaction extends Mandiri_Controller {
     {
         $data['heading_title'] = 'Cashback Voucher Transaction';
         $data['sidebars'] = $this->get_sidebar();
-        $data['sidebar_id'] = 3;
+        $data['sidebar_id'] = $this->sidebar_id;
         
         // Mengambil data card type untuk dropdown
         $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
