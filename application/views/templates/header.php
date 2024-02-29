@@ -8,6 +8,8 @@
 
     <title><?php echo $heading_title;?></title>
 
+    <link rel="shortcut icon" href="<?php echo base_url() . 'assets/img/Bank_Mandiri_logo_2016.png';?>" type="image/x-icon">
+
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <!-- Our Custom CSS -->

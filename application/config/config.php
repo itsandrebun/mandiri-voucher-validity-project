@@ -35,7 +35,7 @@ $config['base_url'] = 'http://localhost/mandiri-voucher-validity-project/';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
