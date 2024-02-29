@@ -13,8 +13,7 @@ class Transaction extends Mandiri_Controller {
         $this->load->library('form_validation');
     }
 
-    public function index()
-    {
+    public function add(){
         $data['heading_title'] = 'Cashback Voucher Validity';
         $data['sidebars'] = $this->get_sidebar();
         $data['sidebar_id'] = 3;
@@ -23,7 +22,24 @@ class Transaction extends Mandiri_Controller {
         $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
         // Mengambil data lainnya jika diperlukan, misalnya payment_type, dll.
 
-        $this->load->view('transaction', $data);
+        $this->load->view('transaction/form', $data);
+    }
+
+    public function index()
+    {
+        $data['heading_title'] = 'Cashback Voucher Transaction';
+        $data['sidebars'] = $this->get_sidebar();
+        $data['sidebar_id'] = 3;
+        
+        // Mengambil data card type untuk dropdown
+        $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
+        // Mengambil data lainnya jika diperlukan, misalnya payment_type, dll.
+
+        $this->load->view('transaction/list', $data);
+    }
+
+    public function export(){
+
     }
 
     public function submit_transaction()
@@ -41,8 +57,7 @@ class Transaction extends Mandiri_Controller {
 			$errors = $this->form_validation->error_string(); 
 			$this->session->set_flashdata('errors', $errors); 
 			
-			
-            redirect('transaction'); 
+            redirect('transaction/add'); 
 		} else {
             $transactionData = [
                 'name_customer' => $this->input->post('customer_name'),
@@ -50,12 +65,10 @@ class Transaction extends Mandiri_Controller {
 				'card_number' => $this->input->post('card_number'),
                 'email' => $this->input->post('customer_email'),
                 'phone_number' => $this->input->post('customer_phone'),
-                'transaction_amount' => $this->input->post('transaction_nominal'),
+                'transaction_amount' => str_replace('.','',$this->input->post('transaction_nominal')),
 				'master_card_id' => $this->input->post('card_type'),
                 'payment_type' => $this->input->post('payment_type'),
 				'customer_cashback' => $this->input->post('cashback_value')
-
-
             ];
 
 			$this->Customer_details_model->add_customer_details($transactionData);
