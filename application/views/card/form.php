@@ -4,30 +4,15 @@
 
     <div class="wrapper">
         <!-- Sidebar  -->
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <h3>Mandiri Voucher Validity</h3>
-            </div>
-
-            <?php $this->load->view('templates/sidebar');?>
-        </nav>
+        <?php $this->load->view('templates/sidebar');?>
 
         <!-- Page Content  -->
         <div id="content">
-
-            <button type="button" id="sidebarCollapse" class="btn btn-info">
-                <i class="fas fa-align-left"></i>
-                <span>Toggle Sidebar</span>
-            </button>
-            <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-align-justify"></i>
-            </button>
-
             <h2><?php echo $heading_title;?></h2>
             <form method="POST" action="<?php echo base_url() . 'transaction/submit_transaction' ?>">
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
-                        <label for="">Card Name</label>
+                        <label for=""><small>Card Name</small></label>
                         <input type="text" name="card_name" class="form-control" placeholder="Card Name">
                     </div>
                 </div>

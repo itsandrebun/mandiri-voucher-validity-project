@@ -6,24 +6,39 @@ class Transaction extends Mandiri_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Customer_details_model');
-        $this->load->model('Cashback_offer_model');
-        $this->load->model('Master_card_type_model');
+        $this->load->model(array('Customer_details_model','Cashback_offer_model','Master_card_type_model'));
         $this->load->helper('url');
         $this->load->library('form_validation');
+        $this->sidebar_id = 3;
     }
 
-    public function index()
-    {
+    public function add(){
         $data['heading_title'] = 'Cashback Voucher Validity';
         $data['sidebars'] = $this->get_sidebar();
-        $data['sidebar_id'] = 3;
+        $data['sidebar_id'] = $this->sidebar_id;
         
         // Mengambil data card type untuk dropdown
         $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
         // Mengambil data lainnya jika diperlukan, misalnya payment_type, dll.
 
-        $this->load->view('transaction', $data);
+        $this->load->view('transaction/form', $data);
+    }
+
+    public function index()
+    {
+        $data['heading_title'] = 'Cashback Voucher Transaction';
+        $data['sidebars'] = $this->get_sidebar();
+        $data['sidebar_id'] = $this->sidebar_id;
+        
+        // Mengambil data card type untuk dropdown
+        $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
+        // Mengambil data lainnya jika diperlukan, misalnya payment_type, dll.
+
+        $this->load->view('transaction/list', $data);
+    }
+
+    public function export(){
+
     }
 
     public function submit_transaction()
@@ -33,7 +48,7 @@ class Transaction extends Mandiri_Controller {
         $this->form_validation->set_rules('id_number', 'ID Number', 'required');
 		$this->form_validation->set_rules('id_number', 'ID Number', 'required|callback_validate_id_number');
 
-        // Tambahkan rules validasi Untuk yang lainnnnnnnnnnnnnnnnnnnnn
+        // Tambahkan rules validasi Untuk yang lain
 
 
 
@@ -41,8 +56,7 @@ class Transaction extends Mandiri_Controller {
 			$errors = $this->form_validation->error_string(); 
 			$this->session->set_flashdata('errors', $errors); 
 			
-			
-            redirect('transaction'); 
+            redirect('transaction/add'); 
 		} else {
             $transactionData = [
                 'name_customer' => $this->input->post('customer_name'),
@@ -50,12 +64,10 @@ class Transaction extends Mandiri_Controller {
 				'card_number' => $this->input->post('card_number'),
                 'email' => $this->input->post('customer_email'),
                 'phone_number' => $this->input->post('customer_phone'),
-                'transaction_amount' => $this->input->post('transaction_nominal'),
+                'transaction_amount' => str_replace('.','',$this->input->post('transaction_nominal')),
 				'master_card_id' => $this->input->post('card_type'),
                 'payment_type' => $this->input->post('payment_type'),
 				'customer_cashback' => $this->input->post('cashback_value')
-
-
             ];
 
 			$this->Customer_details_model->add_customer_details($transactionData);
@@ -94,8 +106,8 @@ class Transaction extends Mandiri_Controller {
 					$this->form_validation->set_message('validate_id_number', 'You can only submit once a day for the same ID Number.');
 					return FALSE;
 				}
-			}else{
-				$this->form_validation->set_message('1', 'You can only submit twice in an exhibition period for the same ID Number.');
+			}elseif (count($transaction_data) > 1) {
+				$this->form_validation->set_message('validate_id_number', 'You can only submit twice in an exhibition period for the same ID Number.');
 				return FALSE;
 			}
 		}
