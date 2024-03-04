@@ -26,37 +26,31 @@
                         <th class="text-center" style="vertical-align:middle;"></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td class="text-center" style="vertical-align:middle;">Prioritas</td>
-                        <td class="text-center" style="vertical-align:middle">
-                            <a href="">Edit</a>
-                        </td>
-                    </tr>
+                    <?php if(isset($card_types) && !empty($card_types)){?>
+                        <?php for($b = 0; $b < count($card_types); $b++) {?>
+                            <tr>
+                                <td class="text-center" style="vertical-align:middle;"><?php echo $card_types[$b]['master_card_name']?></td>
+                                <td class="text-center" style="vertical-align:middle">
+                                    <a href="<?php echo base_url() . 'card/edit?id=' . $card_types[$b]['master_card_id']?>">Edit</a>
+                                </td>
+                            </tr>
+                        <?php }?>                    
+                    <?php } else {?>
+                        <tr>
+                            <td class="text-center" style="vertical-align: middle;" colspan="2">No data found</td>
+                        </tr>
+                    <?php }?>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Correct Popup -->
-    <div class="modal fade" id="correctAlertPopup" tabindex="-1" role="dialog" aria-labelledby="correctAlertPopupCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title" style="color:green" id="correctAlertPopupLongTitle"><i class="fa fa-check"></i> Good News</h2>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <span>Data has been successfully inserted!</span>
-                </div>                    
-            </div>
-        </div>
-    </div>
+    <?php $this->load->view('templates/success_popup');?>
 
     <?php $this->load->view('templates/js_list');?>
     <script>
-        $('#correctAlertPopup').modal('show');
+        <?php if($this->session->flashdata('success')) {?>
+            $('#correctAlertPopup').modal('show');
+        <?php }?>
     </script>
     <?php $this->load->view('templates/footer');?>

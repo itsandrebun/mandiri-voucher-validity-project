@@ -22,7 +22,6 @@ $(document).ready(function(){
     });
 });
 
-
 $(document).ready(function() {
     $('#cashback').change(function() {
         var selectedCashback = $(this).find('option:selected').val();

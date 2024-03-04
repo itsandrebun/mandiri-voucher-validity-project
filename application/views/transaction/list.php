@@ -18,23 +18,24 @@
                 </div>
             </div>
 
-            <form>
+            <form id="transaction_filter_form" method="GET">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="" class="col-sm-label"><small>Transaction Start Date</small></label>
-                            <input type="date" name="transaction_start_date" class="form-control" id="">
+                            <input type="date" name="transaction_start_date" class="form-control" value="<?php echo (isset($params_get['transaction_start_date']) && !empty($params_get['transaction_start_date']) ? $params_get['transaction_start_date'] : '');?>" id="">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="" class="col-sm-label"><small>Transaction End Date</small></label>
-                            <input type="date" name="transaction_end_date" class="form-control" id="">
+                            <input type="date" name="transaction_end_date" class="form-control" id="" value="<?php echo (isset($params_get['transaction_end_date']) && !empty($params_get['transaction_end_date']) ? $params_get['transaction_end_date'] : '');?>">
                         </div>
                     </div>
                 </div>
                 <div class="float-right">
-                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i> Filter</button>
+                    <button type="button" class="btn btn-primary" onclick="$('input').val('');"><i class="fa fa-search"></i> Clear</button>
+                    <button type="button" class="btn btn-primary" onclick="$('#transaction_filter_form').submit();"><i class="fa fa-search"></i> Filter</button>
                 </div>
             </form>
             
@@ -42,6 +43,7 @@
                 <table class="table table-condensed table-bordered mt-3">
                     <thead>
                         <tr>
+                            <th class="text-center" style="vertical-align:middle;" rowspan="2">Transaction Date</th>
                             <th class="text-center" style="vertical-align:middle;" rowspan="2">ID Number</th>
                             <th class="text-center" style="vertical-align:middle;" rowspan="2">Card Number</th>
                             <th class="text-center" style="vertical-align:middle;" rowspan="2">Customer Name</th>
@@ -55,46 +57,36 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-center" style="vertical-align:middle;">8379379327329872398</td>
-                            <td class="text-center" style="vertical-align:middle;">4349384098430984309</td>
-                            <td class="text-center" style="vertical-align:middle;">Andre Bun</td>
-                            <td class="text-center" style="vertical-align:middle;">6282737388282</td>
-                            <td class="text-center" style="vertical-align:middle;">marsin.bun@antavaya.com</td>
-                            <td class="text-center" style="vertical-align:middle;">Prioritas</td>
-                            <td class="text-center" style="vertical-align:middle;">Full Payment</td>
-                            <td class="text-center" style="vertical-align:middle;"><?php echo number_format(20000000,0,",",".");?></td>
-                            <td class="text-right" style="vertical-align:middle;"><?php echo number_format(2000000,0,",",".");?></td>
-                            <td class="text-center" style="vertical-align:middle">
-                                <a href="">Print</a>
-                            </td>
-                        </tr>
+                        <?php if(isset($transaction_list) && !empty($transaction_list)){?>
+                            <?php for($b = 0; $b < count($transaction_list); $b++){?>
+                                <tr>
+                                    <td class="text-center" style="vertical-align:middle"><?php echo date('d M Y H:i:s',strtotime($transaction_list[$b]['created_at']))?></td>
+                                    <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['id_number'];?></td>
+                                    <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['card_number'];?></td>
+                                    <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['name_customer'];?></td>
+                                    <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['phone_number'];?></td>
+                                    <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['email'];?></td>
+                                    <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['master_card_name'];?></td>
+                                    <td class="text-center" style="vertical-align:middle;">Full Payment</td>
+                                    <td class="text-right" style="vertical-align:middle;"><?php echo number_format($transaction_list[$b]['transaction_amount'],0,",",".");?></td>
+                                    <td class="text-right" style="vertical-align:middle;"><?php echo number_format($transaction_list[$b]['customer_cashback'],0,",",".");?></td>
+                                    <td class="text-center" style="vertical-align:middle">
+                                        <!-- <a href="">Print</a> -->
+                                    </td>
+                                </tr>
+                            <?php }?>
+                        <?php } else {?>
+                            <tr>
+                                <td class="text-center" colspan="10">No data found!</td>
+                            </tr>
+                        <?php }?>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <?php if($this->session->flashdata('success')) {?>
-
-    <!-- Correct Popup -->
-    <div class="modal fade" id="correctAlertPopup" tabindex="-1" role="dialog" aria-labelledby="correctAlertPopupCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title" style="color:green" id="correctAlertPopupLongTitle"><i class="fa fa-check"></i> Good News</h2>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <span><?php echo $this->session->flashdata('success');?></span>
-                </div>                    
-            </div>
-        </div>
-    </div>
-
-    <?php }?>
+    <?php $this->load->view('templates/success_popup');?>
 
     <?php $this->load->view('templates/js_list');?>
     <script>

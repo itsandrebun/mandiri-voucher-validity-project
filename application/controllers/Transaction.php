@@ -13,9 +13,14 @@ class Transaction extends Mandiri_Controller {
     }
 
     public function add(){
+    	if($this->input->method() == "post"){
+    		$this->submit_transaction();
+    	}
+
         $data['heading_title'] = 'Cashback Voucher Validity';
         $data['sidebars'] = $this->get_sidebar();
         $data['sidebar_id'] = $this->sidebar_id;
+        $data['params_error'] = $this->input->post();
         
         // Mengambil data card type untuk dropdown
         $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
@@ -29,6 +34,8 @@ class Transaction extends Mandiri_Controller {
         $data['heading_title'] = 'Cashback Voucher Transaction';
         $data['sidebars'] = $this->get_sidebar();
         $data['sidebar_id'] = $this->sidebar_id;
+        $data['params_get'] = $this->input->get();
+        $data['transaction_list'] = $this->Customer_details_model->get_transaction($data['params_get']);
         
         // Mengambil data card type untuk dropdown
         $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
@@ -41,22 +48,24 @@ class Transaction extends Mandiri_Controller {
 
     }
 
-    public function submit_transaction()
+    private function submit_transaction()
     {
         // Validasi input form
         $this->form_validation->set_rules('customer_name', 'Customer Name', 'required');
-        $this->form_validation->set_rules('id_number', 'ID Number', 'required');
+        $this->form_validation->set_rules('customer_phone', 'Customer Phone Number', 'required');
+        $this->form_validation->set_rules('customer_email', 'Customer Email', 'required');
+        $this->form_validation->set_rules('card_number', 'Card Number', 'required');
 		$this->form_validation->set_rules('id_number', 'ID Number', 'required|callback_validate_id_number');
+		$this->form_validation->set_rules('transaction_nominal', 'Transaction Amount', 'required');
+		$this->form_validation->set_rules('card_type', 'Card Type', 'required');
+		$this->form_validation->set_rules('payment_type', 'Payment Type', 'required');
+		$this->form_validation->set_rules('cashback', 'Cashback', 'required|callback_validate_cashback');
 
         // Tambahkan rules validasi Untuk yang lain
 
-
-
 		if ($this->form_validation->run() === FALSE) {
 			$errors = $this->form_validation->error_string(); 
-			$this->session->set_flashdata('errors', $errors); 
-			
-            redirect('transaction/add'); 
+			$this->session->set_flashdata('errors', $errors);
 		} else {
             $transactionData = [
                 'name_customer' => $this->input->post('customer_name'),
@@ -67,10 +76,18 @@ class Transaction extends Mandiri_Controller {
                 'transaction_amount' => str_replace('.','',$this->input->post('transaction_nominal')),
 				'master_card_id' => $this->input->post('card_type'),
                 'payment_type' => $this->input->post('payment_type'),
-				'customer_cashback' => $this->input->post('cashback_value')
+                'cashback_id' => explode('|',$this->input->post('cashback'))[1],
+				'customer_cashback' => explode('|',$this->input->post('cashback_value'))[0]
             ];
 
 			$this->Customer_details_model->add_customer_details($transactionData);
+
+			$cashback_detail = $this->Cashback_offer_model->get_cashback_offer_by_id($transactionData['cashback_id']);
+
+			$total_quota = $cashback_detail['total_quota'];
+			$sold_quota = count($this->Customer_details_model->get_transaction(array('cashback' => $transactionData['cashback_id'])));
+
+			$this->Cashback_offer_model->update_cashback_offer($transactionData['cashback_id'], array('available_quota' => ($total_quota - $sold_quota)));
 
 			$this->session->set_flashdata('success', 'Data has been successfully inserted!');
 
@@ -85,11 +102,11 @@ class Transaction extends Mandiri_Controller {
 		$paymentType = $this->input->post('payment_type');
 		$transactionAmount = $this->input->post('transaction_nominal');
 	
-		$cashbackOptions = $this->Cashback_offer_model->getCashbackOptions($cardType, $paymentType, $transactionAmount);
+		$cashbackOptions = $this->Cashback_offer_model->getCashbackOptions($cardType, $paymentType, $transactionAmount, "0");
 	
 		$optionsHtml = '<option value="">Please Select</option>';
 		foreach ($cashbackOptions as $option) {
-			$optionsHtml .= "<option value='{$option['cashback_amount']}'>{$option['description']}</option>";
+			$optionsHtml .= "<option value='".$option['cashback_amount'].'|'.$option['id_cashback_offer']."'>".$option['description']."</option>";
 		}
 	
 		echo $optionsHtml;
@@ -114,6 +131,24 @@ class Transaction extends Mandiri_Controller {
 		
 		
 	
+		return TRUE;
+	}
+
+	public function validate_cashback($cashback){
+		if($cashback != ""){
+			$cashback = explode('|', $cashback)[1];
+			$cashback_detail = $this->Cashback_offer_model->get_cashback_offer_by_id($cashback);
+
+			$total_quota = $cashback_detail['total_quota'];
+			$available_quota = $cashback_detail['available_quota'];
+
+			if($available_quota == 0){
+				$this->form_validation->set_message('validate_cashback', 'There is no quota for this cashback');
+
+				return FALSE;
+			}
+		}
+		
 		return TRUE;
 	}
 	
