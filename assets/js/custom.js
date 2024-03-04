@@ -2,7 +2,6 @@ $(document).ready(function(){
     $('#card_type, #payment_type, #transaction_nominal').change(function(){
         var cardType = $('#card_type').val();
         var paymentType = $('#payment_type').val();
-        console.log($('#transaction_nominal').val());
         var transactionAmount = parseInt($('#transaction_nominal').val().replace(/\./g,''));
         if(cardType != '' && paymentType != '' && transactionAmount != '') {
             $.ajax({
@@ -14,7 +13,6 @@ $(document).ready(function(){
                     transaction_nominal: transactionAmount
                 },
                 success: function(data) {
-                    console.log(data);
                     $('#cashback').html(data);
                 }
             });
