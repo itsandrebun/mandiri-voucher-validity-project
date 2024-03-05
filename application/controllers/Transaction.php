@@ -353,7 +353,7 @@ class Transaction extends Mandiri_Controller {
 			$transactionData = [
                 'approval_code' => $this->input->post('approval_code'),
                 'invoice_number' => $this->input->post('invoice_number'),
-				'installment_period' => $this->input->post('installment_period'),
+				'installment_period' => ($this->input->post('installment_period') != "" && $this->input->post('installment_period') != null ? $this->input->post('installment_period') : null),
 				'approval_status' => 1
             ];
 
@@ -462,7 +462,7 @@ class Transaction extends Mandiri_Controller {
 			$transaction_data = $this->Customer_details_model->get_transaction_by_id_number($id_number);
 		
 			if(count($transaction_data) == 1){
-				$last_transaction_date = date('Y-m-d',($transaction_data[0]['created_at']));
+				$last_transaction_date = date('Y-m-d',strtotime($transaction_data[0]['created_at']));
 				$transaction_date = date('Y-m-d');
 				if($transaction_date == $last_transaction_date){
 					$this->form_validation->set_message('validate_id_number', 'You can only submit once a day for the same ID Number.');
