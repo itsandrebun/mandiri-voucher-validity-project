@@ -64,15 +64,18 @@
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['id_number'];?></td>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['card_number'];?></td>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['name_customer'];?></td>
-                                    <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['phone_number'];?></td>
+                                    <td class="text-center" style="vertical-align:middle;"><?php echo "+62".$transaction_list[$b]['phone_number'];?></td>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['email'];?></td>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['master_card_name'];?></td>
                                     <td class="text-center" style="vertical-align:middle;">Full Payment</td>
                                     <td class="text-right" style="vertical-align:middle;"><?php echo number_format($transaction_list[$b]['transaction_amount'],0,",",".");?></td>
                                     <td class="text-right" style="vertical-align:middle;"><?php echo number_format($transaction_list[$b]['customer_cashback'],0,",",".");?></td>
                                     <td class="text-center" style="vertical-align:middle;">
-                                        <a href="<?php echo base_url().'transaction/add_approval_detail?id='.$transaction_list[$b]['id_customer_details']?>">Add Approval Detail</a> | 
-                                        <a class="reject_transaction_button" style="color:red" data-url="<?php echo base_url().'transaction/reject?id='.$transaction_list[$b]['id_customer_details'];?>">Reject</a>
+                                        <?php if($transaction_list[$b]['approval_status'] == null) {?>
+                                            <a style="color:green" href="<?php echo base_url().'transaction/approve?id='.$transaction_list[$b]['id_customer_details']?>">Approve</a> | 
+                                            <a class="reject_transaction_button" style="color:red" data-url="<?php echo base_url().'transaction/reject?id='.$transaction_list[$b]['id_customer_details'];?>">Reject</a>
+                                        <?php }?>
+                                        
                                     </td>
                                 </tr>
                             <?php }?>

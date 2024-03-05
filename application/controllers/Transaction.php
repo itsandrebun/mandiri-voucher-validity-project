@@ -19,7 +19,7 @@ class Transaction extends Mandiri_Controller {
     {
         parent::__construct();
         $this->load->model(array('Customer_details_model','Cashback_offer_model','Master_card_type_model'));
-        $this->load->helper('url');
+        $this->load->helper(array('url','email'));
         $this->load->library('form_validation');
         $this->sidebar_id = 3;
     }
@@ -41,12 +41,12 @@ class Transaction extends Mandiri_Controller {
         $this->load->view('transaction/form', $data);
     }
 
-	public function add_approval_detail(){
+	public function approve(){
 		if($this->input->method() == "post"){
     		$this->submit_approval_detail();
     	}
 
-        $data['heading_title'] = 'Add Approval Detail';
+        $data['heading_title'] = 'Approve';
         $data['sidebars'] = $this->get_sidebar();
         $data['sidebar_id'] = $this->sidebar_id;
 		$data['id'] = $this->input->get('id');
@@ -125,7 +125,7 @@ class Transaction extends Mandiri_Controller {
                 'bold'=>true,
                 'size'=>11
             ]
-        ]; 
+        ];
 
         $tableHead = [
             'font' => [
@@ -246,66 +246,7 @@ class Transaction extends Mandiri_Controller {
 						->getNumberFormat()
 						->setFormatCode('#,##0');
 
-		$spreadsheet->getActiveSheet()->getStyle("A2")->getAlignment()->setHorizontal('center')->setVertical('center');
-
-		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($bold);
-		$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($bold);
-		$spreadsheet->getActiveSheet()->getStyle("C".$row_counter)->applyFromArray($bold);
-		$spreadsheet->getActiveSheet()->getStyle("D".$row_counter)->applyFromArray($bold);
-		$spreadsheet->getActiveSheet()->getStyle("E".$row_counter)->applyFromArray($bold);
-		$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($bold);
-		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($bold);
-		$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($bold);
-		$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($bold);
-		$spreadsheet->getActiveSheet()->getStyle("J".$row_counter)->applyFromArray($bold);
-		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($cellStyle);
-		$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($cellStyle);
-		$spreadsheet->getActiveSheet()->getStyle("C".$row_counter)->applyFromArray($cellStyle);
-		$spreadsheet->getActiveSheet()->getStyle("D".$row_counter)->applyFromArray($cellStyle);
-		$spreadsheet->getActiveSheet()->getStyle("E".$row_counter)->applyFromArray($cellStyle);
-		$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($cellStyle);
-		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($cellStyle);
-		$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($cellStyle);
-		$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($cellStyle);
-		$spreadsheet->getActiveSheet()->getStyle("J".$row_counter)->applyFromArray($cellStyle);
-
-		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter.":J".$row_counter)->getAlignment()->setHorizontal('center')->setVertical('center');
-
-		$spreadsheet->getActiveSheet()
-					->getRowDimension($row_counter)
-					->setRowHeight(30.25);
-
-		$row_counter++;
-
-		$first_row = 0;
-
-		$last_row = 0;
-		$transaction_list = $this->Customer_details_model->get_transaction($this->input->get());
-
-		for ($b=0; $b < count($transaction_list); $b++) {
-			if($b == 0){
-				$first_row = $row_counter;
-			}
-
-			if($b == count($transaction_list) - 1){
-				$last_row = $row_counter;
-			}
-
-			$spreadsheet->getActiveSheet()
-						->setCellValue('A'.$row_counter, ($b+1))
-						->setCellValue('B'.$row_counter, (($transaction_list[$b]['created_at'] != "" && $transaction_list[$b]['created_at'] != NULL) ? \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime($transaction_list[$b]['created_at'])) : ""))
-						->setCellValue('C'.$row_counter, $transaction_list[$b]['name_customer'])
-						->setCellValue('D'.$row_counter, $transaction_list[$b]['card_number'])
-						->setCellValue('E'.$row_counter, $transaction_list[$b]['installment_period'])
-						->setCellValue('F'.$row_counter, $transaction_list[$b]['approval_code'])
-						->setCellValue('G'.$row_counter, $transaction_list[$b]['transaction_amount'])
-						->setCellValue('H'.$row_counter, $transaction_list[$b]['customer_cashback'])
-						->setCellValue('I'.$row_counter, "=(G".$row_counter." - H".$row_counter.")")
-						->setCellValue('J'.$row_counter, $transaction_list[$b]['invoice_number']);
-						
-			if($transaction_list[$b]['created_at'] != "" && $transaction_list[$b]['created_at'] != NULL){
-				$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->getNumberFormat()->setFormatCode('dd MMM yyyy H:mm:s');
-			}
+			$spreadsheet->getActiveSheet()->getStyle("A2")->getAlignment()->setHorizontal('center')->setVertical('center');
 
 			$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($cellStyle);
 			$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($cellStyle);
@@ -318,29 +259,39 @@ class Transaction extends Mandiri_Controller {
 			$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($cellStyle);
 			$spreadsheet->getActiveSheet()->getStyle("J".$row_counter)->applyFromArray($cellStyle);
 
-			$spreadsheet->getActiveSheet()
-						->getStyle("G".$row_counter.":I".$row_counter)
-						->getNumberFormat()
-						->setFormatCode('#,##0');
+			$spreadsheet->getActiveSheet()->getStyle("A".$row_counter.":J".$row_counter)->getAlignment()->setHorizontal('center')->setVertical('center');
+
+			$spreadsheet->getActiveSheet()->getStyle("G".$row_counter.":I".$row_counter)->getAlignment()->setHorizontal('right')->setVertical('center');
 
 			$spreadsheet->getActiveSheet()
 						->getRowDimension($row_counter)
-						->setRowHeight(20.25);
-
-			$spreadsheet->getActiveSheet()->getStyle("A".$row_counter.":J".$row_counter)->getAlignment()->setVertical('center');
-			$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->getAlignment()->setHorizontal('center');
+						->setRowHeight(30.25);
 
 			$row_counter++;
+
 		}
 
 		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->getAlignment()->setHorizontal('center')->setVertical('center');
 		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter.":I".$row_counter)->getAlignment()->setVertical('center');
 		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("C".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("D".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("E".$row_counter)->applyFromArray($cellStyle);
 		$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($cellStyle);
 		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($cellStyle);
 		$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($cellStyle);
 		$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($cellStyle);
 		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("C".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("D".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("E".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("J".$row_counter)->applyFromArray($bold);
 		$spreadsheet->getActiveSheet()
 					->getRowDimension($row_counter)
 					->setRowHeight(20.25);
@@ -357,7 +308,6 @@ class Transaction extends Mandiri_Controller {
 					->getNumberFormat()
 					->setFormatCode('#,##0');
 		
-
 		$spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
 		$spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
 		$spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
@@ -369,10 +319,10 @@ class Transaction extends Mandiri_Controller {
 		$spreadsheet->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
 		$spreadsheet->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);		
 
-		$spreadsheet->getActiveSheet()->setTitle('Rekap Diskon Mandiri-'.date('d-m-Y'));
+		$spreadsheet->getActiveSheet()->setTitle('06-10MAR\'24');
 		$spreadsheet->setActiveSheetIndex(0);
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		header('Content-Disposition: attachment;filename="Rekap Diskon Mandiri'.date('dmYHi').'.xlsx"');
+		header('Content-Disposition: attachment;filename="Rekap Diskon Mandiri '.date('dmYHi').'.xlsx"');
 		header('Cache-Control: max-age=0');
 		header('Cache-Control: max-age=1');
 		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
@@ -380,10 +330,21 @@ class Transaction extends Mandiri_Controller {
 		exit;
     }
 
+    public function validate_email($email){
+    	if($email != "" && $email != NULL){
+    		if (!valid_email($email))
+			{
+				$this->form_validation->set_message('validate_email','Invalid email format');
+				return FALSE;
+			}
+    	}
+
+    	return TRUE;
+    }
+
 	private function submit_approval_detail(){
 		$this->form_validation->set_rules('approval_code', 'Approval Code', 'required');
         $this->form_validation->set_rules('invoice_number', 'Invoice Number', 'required');
-        $this->form_validation->set_rules('installment_period', 'Installment Period', 'required');
 
 		if ($this->form_validation->run() === FALSE) {
 			$errors = $this->form_validation->error_string(); 
@@ -392,7 +353,8 @@ class Transaction extends Mandiri_Controller {
 			$transactionData = [
                 'approval_code' => $this->input->post('approval_code'),
                 'invoice_number' => $this->input->post('invoice_number'),
-				'installment_period' => $this->input->post('installment_period')
+				'installment_period' => $this->input->post('installment_period'),
+				'approval_status' => 1
             ];
 
 			$this->Customer_details_model->update_customer_details($this->input->post('id'), $transactionData);
@@ -408,7 +370,7 @@ class Transaction extends Mandiri_Controller {
         // Validasi input form
         $this->form_validation->set_rules('customer_name', 'Customer Name', 'required');
         $this->form_validation->set_rules('customer_phone', 'Customer Phone Number', 'required');
-        $this->form_validation->set_rules('customer_email', 'Customer Email', 'required');
+        $this->form_validation->set_rules('customer_email', 'Customer Email', 'callback_validate_email');
         $this->form_validation->set_rules('card_number', 'Card Number', 'required');
 		$this->form_validation->set_rules('id_number', 'ID Number', 'required|callback_validate_id_number');
 		$this->form_validation->set_rules('transaction_nominal', 'Transaction Amount', 'required');

@@ -29,7 +29,13 @@
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>Customer Phone Number</small></label>
-                        <input type="text" name="customer_phone" class="form-control" placeholder="Customer Phone Number" value="<?php echo (isset($params_error['customer_phone']) && !empty($params_error['customer_phone']) ? $params_error['customer_phone'] : "")?>">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">+62</span>
+                            </div>
+                            <input type="text" name="customer_phone" class="form-control" placeholder="Customer Phone Number" value="<?php echo (isset($params_error['customer_phone']) && !empty($params_error['customer_phone']) ? $params_error['customer_phone'] : "")?>">
+                        </div>
+                        
                     </div>
 					<div class="col-sm-12">
                         <label for=""><small>Transaction Amount</small></label>
