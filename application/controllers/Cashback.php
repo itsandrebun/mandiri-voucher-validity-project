@@ -119,7 +119,7 @@ class Cashback extends Mandiri_Controller {
 					$sold_quota = count($this->Customer_details_model->get_transaction(array('cashback' => $this->input->post('id'))));
 
 					$total_quota -= ($extra_quota - $sold_quota);
-					if($extra_quota < 0){
+					if($total_quota < 0){
 						$this->form_validation->set_message('validate_extra_quota','Quota cannot be less than 0 after decreasement');
 
 						return FALSE;

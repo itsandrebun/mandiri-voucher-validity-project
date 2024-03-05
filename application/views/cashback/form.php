@@ -41,7 +41,6 @@
                         <input type="number" <?php echo (isset($id) && $id != null && $id != "" ? "readonly" : "")?> value="<?php echo (isset($cashback_detail['total_quota']) && !empty($cashback_detail['total_quota']) ? $cashback_detail['total_quota'] : "" )?>" name="total_quota" class="form-control" placeholder="Total Quota">
                     </div>
                     <?php if(isset($id)) {?>
-                    <div class="col-md-6 col-sm-12">
                         <div class="col-md-6 col-sm-12">
                             <label for=""><small>Activity</small></label>
                             <select name="activity" class="form-control" id="activity">
