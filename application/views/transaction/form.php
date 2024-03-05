@@ -61,6 +61,7 @@
 					<input type="hidden" name="cashback_value" id="cashback_value" value="<?php echo (isset($params_error['cashback_value']) && !empty($params_error['cashback_value']) ? $params_error['cashback_value'] : "")?>">
                 </div>
                 <div class="float-right mt-2">
+                    <button type="button" class="btn btn-light" onclick="window.location.href= '<?php echo base_url().'transaction'?>'"><i class="fa fa-arrow-left"></i> Back</button>
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Submit</button>
                 </div>
             </form>

@@ -139,10 +139,10 @@ class Transaction extends Mandiri_Controller {
 			$cashback = explode('|', $cashback)[1];
 			$cashback_detail = $this->Cashback_offer_model->get_cashback_offer_by_id($cashback);
 
-			$total_quota = $cashback_detail['total_quota'];
+			$is_closed = $cashback_detail['is_closed'];
 			$available_quota = $cashback_detail['available_quota'];
 
-			if($available_quota == 0){
+			if($available_quota == 0 || $is_closed == 1){
 				$this->form_validation->set_message('validate_cashback', 'There is no quota for this cashback');
 
 				return FALSE;
