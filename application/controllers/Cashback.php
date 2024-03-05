@@ -107,7 +107,6 @@ class Cashback extends Mandiri_Controller {
 
 	    	redirect('cashback');
     	}
-    	
     }
 
 	public function validate_extra_quota($extra_quota){
@@ -117,19 +116,13 @@ class Cashback extends Mandiri_Controller {
 
 			if($activity != null && $activity != ""){
 				if($activity == "decrease"){
-					$total_quota -= $extra_quota;
-					if($extra_quota < 0){
+					$sold_quota = count($this->Customer_details_model->get_transaction(array('cashback' => $this->input->post('id'))));
+
+					$total_quota -= ($extra_quota - $sold_quota);
+					if($total_quota < 0){
 						$this->form_validation->set_message('validate_extra_quota','Quota cannot be less than 0 after decreasement');
 
 						return FALSE;
-					}else{
-						$sold_quota = count($this->Customer_details_model->get_transaction(array('cashback' => $this->input->post('id'))));
-
-						if($sold_quota > $total_quota){
-							$this->form_validation->set_message('validate_extra_quota','Quota cannot be less than the sold quota after decreasement');
-
-							return FALSE;
-						}
 					}
 				}
 			}

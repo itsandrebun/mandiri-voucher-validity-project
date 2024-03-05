@@ -85,6 +85,26 @@
                 </table>
             </div>
         </div>
+    </div>    
+    <!-- Reject Popup -->
+    <div class="modal fade" id="rejectAlertPopup" tabindex="-1" role="dialog" aria-labelledby="rejectAlertPopupCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" style="color:red" id="rejectAlertPopupLongTitle"><i class="fa fa-exclamation-triangle"></i> Warning</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span>Are you sure want to reject this data?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="reject_transaction_yes_button">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- Reject Popup -->

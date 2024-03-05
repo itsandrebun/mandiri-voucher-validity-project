@@ -246,6 +246,83 @@ class Transaction extends Mandiri_Controller {
 						->getNumberFormat()
 						->setFormatCode('#,##0');
 
+		$spreadsheet->getActiveSheet()->getStyle("A2")->getAlignment()->setHorizontal('center')->setVertical('center');
+
+		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("C".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("D".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("E".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("J".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("C".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("D".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("E".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("J".$row_counter)->applyFromArray($cellStyle);
+
+		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter.":J".$row_counter)->getAlignment()->setHorizontal('center')->setVertical('center');
+
+		$spreadsheet->getActiveSheet()
+					->getRowDimension($row_counter)
+					->setRowHeight(30.25);
+
+		$row_counter++;
+
+		$first_row = 0;
+
+		$last_row = 0;
+		$transaction_list = $this->Customer_details_model->get_transaction($this->input->get());
+
+		for ($b=0; $b < count($transaction_list); $b++) {
+			if($b == 0){
+				$first_row = $row_counter;
+			}
+
+			if($b == count($transaction_list) - 1){
+				$last_row = $row_counter;
+			}
+
+			$spreadsheet->getActiveSheet()
+						->setCellValue('A'.$row_counter, ($b+1))
+						->setCellValue('B'.$row_counter, (($transaction_list[$b]['created_at'] != "" && $transaction_list[$b]['created_at'] != NULL) ? \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime($transaction_list[$b]['created_at'])) : ""))
+						->setCellValue('C'.$row_counter, $transaction_list[$b]['name_customer'])
+						->setCellValue('D'.$row_counter, $transaction_list[$b]['card_number'])
+						->setCellValue('E'.$row_counter, $transaction_list[$b]['installment_period'])
+						->setCellValue('F'.$row_counter, $transaction_list[$b]['approval_code'])
+						->setCellValue('G'.$row_counter, $transaction_list[$b]['transaction_amount'])
+						->setCellValue('H'.$row_counter, $transaction_list[$b]['customer_cashback'])
+						->setCellValue('I'.$row_counter, "=(G".$row_counter." - H".$row_counter.")")
+						->setCellValue('J'.$row_counter, $transaction_list[$b]['invoice_number']);
+						
+			if($transaction_list[$b]['created_at'] != "" && $transaction_list[$b]['created_at'] != NULL){
+				$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->getNumberFormat()->setFormatCode('dd MMM yyyy H:mm:s');
+			}
+
+			$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("C".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("D".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("E".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("J".$row_counter)->applyFromArray($cellStyle);
+
+			$spreadsheet->getActiveSheet()
+						->getStyle("G".$row_counter.":I".$row_counter)
+						->getNumberFormat()
+						->setFormatCode('#,##0');
+
 			$spreadsheet->getActiveSheet()
 						->getRowDimension($row_counter)
 						->setRowHeight(20.25);
@@ -434,7 +511,7 @@ class Transaction extends Mandiri_Controller {
 				return FALSE;
 			}
 		}		
-	
+
 		return TRUE;
 	}
 
