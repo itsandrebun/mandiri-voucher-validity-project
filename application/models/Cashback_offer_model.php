@@ -19,7 +19,10 @@ class Cashback_offer_model extends CI_Model {
     // Mendapatkan semua penawaran cashback
     public function get_all_cashback_offers()
     {
-        $query = $this->db->get('cashback_offer');
+    	$this->db->select('cashback_offer.*, master_card_type.master_card_name');
+    	$this->db->from('cashback_offer');
+    	$this->db->join('master_card_type','master_card_type.master_card_id = cashback_offer.master_card_id');
+        $query = $this->db->get();
         return $query->result_array();
     }
 
@@ -37,7 +40,7 @@ class Cashback_offer_model extends CI_Model {
         return $this->db->update('cashback_offer', $data);
     }
 
-	public function getCashbackOptions($cardType = null, $paymentType = null, $transactionAmount = null) {
+	public function getCashbackOptions($cardType = null, $paymentType = null, $transactionAmount = null, $isClosedFlag = null) {
 		$this->db->select('*');
 		$this->db->from('cashback_offer');
 		
@@ -48,7 +51,10 @@ class Cashback_offer_model extends CI_Model {
 		if($transactionAmount != null){
 			$this->db->where('min_transaction <=', $transactionAmount);
 		}
-		
+
+		if($isClosedFlag == "0" || $isClosedFlag == "1"){
+			$this->db->where('is_closed', $isClosedFlag);
+		}
 		
 		$query = $this->db->get();
 		$result = $query->result_array();
@@ -58,11 +64,13 @@ class Cashback_offer_model extends CI_Model {
 		foreach ($result as $row) {
 			if ($paymentType == 'full' && $row['cashback_full_payment'] != 0) {
 				$filteredResults[] = [
+					'id_cashback_offer' => $row['id_cashback_offer'],
 					'cashback_amount' => $row['cashback_full_payment'],
 					'description' => "Full Payment Cashback: " . number_format($row['cashback_full_payment'])
 				];
 			} elseif ($paymentType == 'cicilan' && $row['cashback_installment'] != 0) {
 				$filteredResults[] = [
+					'id_cashback_offer' => $row['id_cashback_offer'],
 					'cashback_amount' => $row['cashback_installment'],
 					'description' => "Installment Cashback: " . number_format($row['cashback_installment'])
 				];
