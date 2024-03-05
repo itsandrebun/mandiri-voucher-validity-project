@@ -19,6 +19,7 @@ class Customer_details_model extends CI_Model {
 
 	public function get_transaction_by_id_number($id_number) {
 		$this->db->where('id_number', $id_number);
+        $this->db->where('customer_details.approval_status',1);
 		$this->db->from('customer_details');
 		$this->db->order_by('created_at','DESC');
 		return $this->db->get()->result_array();
@@ -37,15 +38,17 @@ class Customer_details_model extends CI_Model {
             $this->db->where('customer_details.cashback_id = "'.$params['cashback'].'"');
         }
 
+        $this->db->where('customer_details.approval_status',1);
+
         $this->db->join('master_card_type','master_card_type.master_card_id = customer_details.master_card_id','left');
         $this->db->from('customer_details');
-        $this->db->select('customer_details.name_customer, customer_details.card_number, customer_details.id_number, customer_details.email, customer_details.email, customer_details.phone_number, customer_details.master_card_id, master_card_type.master_card_name, customer_details.cashback_id, customer_details.customer_cashback, customer_details.transaction_amount, customer_details.created_at');
+        $this->db->select('customer_details.id_customer_details, customer_details.name_customer, customer_details.card_number, customer_details.id_number, customer_details.email, customer_details.email, customer_details.phone_number, customer_details.master_card_id, master_card_type.master_card_name, customer_details.cashback_id, customer_details.customer_cashback, customer_details.transaction_amount, customer_details.installment_period, customer_details.approval_code, customer_details.invoice_number, customer_details.created_at');
         $this->db->order_by('customer_details.created_at','DESC');
         return $this->db->get()->result_array();
     }
 
-    // Mendapatkan detail pelanggan berdasarkan ID
-    public function get_customer_by_id($id)
+    // Mendapatkan detail transaction berdasarkan ID
+    public function get_transaction_by_id($id)
     {
         $query = $this->db->get_where('customer_details', array('id_customer_details' => $id));
         return $query->row_array();

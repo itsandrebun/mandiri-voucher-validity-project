@@ -70,8 +70,9 @@
                                     <td class="text-center" style="vertical-align:middle;">Full Payment</td>
                                     <td class="text-right" style="vertical-align:middle;"><?php echo number_format($transaction_list[$b]['transaction_amount'],0,",",".");?></td>
                                     <td class="text-right" style="vertical-align:middle;"><?php echo number_format($transaction_list[$b]['customer_cashback'],0,",",".");?></td>
-                                    <td class="text-center" style="vertical-align:middle">
-                                        <!-- <a href="">Print</a> -->
+                                    <td class="text-center" style="vertical-align:middle;">
+                                        <a href="<?php echo base_url().'transaction/add_approval_detail?id='.$transaction_list[$b]['id_customer_details']?>">Add Approval Detail</a> | 
+                                        <a class="reject_transaction_button" style="color:red" data-url="<?php echo base_url().'transaction/reject?id='.$transaction_list[$b]['id_customer_details'];?>">Reject</a>
                                     </td>
                                 </tr>
                             <?php }?>
@@ -85,6 +86,27 @@
             </div>
         </div>
     </div>
+    
+    <!-- Reject Popup -->
+    <div class="modal fade" id="rejectAlertPopup" tabindex="-1" role="dialog" aria-labelledby="rejectAlertPopupCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" style="color:red" id="rejectAlertPopupLongTitle"><i class="fa fa-exclamation-triangle"></i> Warning</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span>Are you sure want to reject this data?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="reject_transaction_yes_button">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <?php $this->load->view('templates/success_popup');?>
 
@@ -93,5 +115,22 @@
         <?php if($this->session->flashdata('success')) {?>
 			$('#correctAlertPopup').modal('show');
 		<?php }?>
+
+        var reject_url = "";
+
+        $('.reject_transaction_button').click(function(){
+            $('#rejectAlertPopup').modal('show');
+
+            reject_url = $(this).attr('data-url');
+        });
+
+        $('#rejectAlertPopup').on('hidden.bs.modal', function (e) {
+            reject_url = "";
+        });
+
+        $('#reject_transaction_yes_button').click(function(){
+            window.location.href = reject_url;
+        })
+
     </script>
     <?php $this->load->view('templates/footer');?>
