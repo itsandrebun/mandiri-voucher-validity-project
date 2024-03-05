@@ -36,15 +36,23 @@
                         <input type="text" value="<?php echo (isset($cashback_detail['cashback_installment']) && !empty($cashback_detail['cashback_installment']) ? $cashback_detail['cashback_installment'] : "" )?>" name="installment_cashback_value" class="form-control format-currency" placeholder="Installment Cashback Value">
                     </div>
                    
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-sm-12">
                         <label for=""><small>Total Quota</small></label>
                         <input type="number" <?php echo (isset($id) && $id != null && $id != "" ? "readonly" : "")?> value="<?php echo (isset($cashback_detail['total_quota']) && !empty($cashback_detail['total_quota']) ? $cashback_detail['total_quota'] : "" )?>" name="total_quota" class="form-control" placeholder="Total Quota">
                     </div>
                     <?php if(isset($id)) {?>
-                    <div class="col-md-6 col-sm-12">
-                        <label for=""><small>Extra Quota</small></label>
-                        <input type="number" value="<?php echo (isset($cashback_detail['extra_quota']) && !empty($cashback_detail['extra_quota']) ? $cashback_detail['extra_quota'] : "" )?>" name="extra_quota" class="form-control" placeholder="Extra Quota">
-                    </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for=""><small>Activity</small></label>
+                            <select name="activity" class="form-control" id="activity">
+                                <option value="">Please Select</option>
+                                <option value="increase" <?php echo (isset($cashback_detail['activity']) && $cashback_detail['activity'] == "increase" ? "selected" : "");?>>Increase</option>
+                                <option value="decrease" <?php echo (isset($cashback_detail['activity']) && $cashback_detail['activity'] == "decrease" ? "selected" : "");?>>Decrease</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for=""><small>Extra Quota</small></label>
+                            <input type="number" value="<?php echo (isset($cashback_detail['extra_quota']) && !empty($cashback_detail['extra_quota']) ? $cashback_detail['extra_quota'] : "" )?>" name="extra_quota" class="form-control" placeholder="Extra Quota">
+                        </div>
                     <?php }?>
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>Close Flag</small></label>
@@ -55,6 +63,7 @@
                     </div>
                 </div>
                 <div class="float-right mt-2">
+                    <button type="button" class="btn btn-light" onclick="window.location.href= '<?php echo base_url().'cashback'?>'"><i class="fa fa-arrow-left"></i> Back</button>
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Submit</button>
                 </div>
             </form>

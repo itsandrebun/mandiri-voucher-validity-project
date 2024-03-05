@@ -20,6 +20,7 @@
                     </div>
                 </div>
                 <div class="float-right mt-2">
+                    <button type="button" class="btn btn-light" onclick="window.location.href= '<?php echo base_url().'card'?>'"><i class="fa fa-arrow-left"></i> Back</button>
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Submit</button>
                 </div>
             </form>

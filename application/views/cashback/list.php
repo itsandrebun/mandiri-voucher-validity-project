@@ -36,7 +36,7 @@
                 <tbody>
                     <?php if(isset($master_cashback_list) && !empty($master_cashback_list)){?>
                         <?php for($b = 0; $b < count($master_cashback_list); $b++){?>
-                            <tr>
+                            <tr <?php echo ($master_cashback_list[$b]['is_closed'] != null && $master_cashback_list[$b]['is_closed'] == 1 ? "class='table-danger'" : "");?>>
                                 <td class="text-center" style="vertical-align:middle;"><?php echo $master_cashback_list[$b]['master_card_name'];?></td>
                                 <td class="text-right" style="vertical-align:middle;"><?php echo number_format($master_cashback_list[$b]['min_transaction'],0,",",".");?></td>
                                 <td class="text-right" style="vertical-align:middle;"><?php echo number_format($master_cashback_list[$b]['cashback_full_payment'],0,",",".");?></td>
