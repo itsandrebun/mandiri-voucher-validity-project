@@ -81,7 +81,7 @@
                             <?php }?>
                         <?php } else {?>
                             <tr>
-                                <td class="text-center" colspan="10">No data found!</td>
+                                <td class="text-center" colspan="11">No data found!</td>
                             </tr>
                         <?php }?>
                     </tbody>
