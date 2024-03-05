@@ -9,7 +9,7 @@
         <!-- Page Content  -->
         <div id="content">
             <h2>Cashback Voucher Validity</h2>
-            <form method="POST" action="<?php echo base_url() . 'transaction/add_approval_detail?id='.$id ?>">
+            <form method="POST" action="<?php echo base_url() . 'transaction/approve?id='.$id ?>">
                 <input type="hidden" name="id" value="<?php echo $id;?>">
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
