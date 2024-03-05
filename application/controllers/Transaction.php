@@ -1,6 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+require('./application/libraries/excel/vendor/autoload.php');
+use PhpOffice\PhpSpreadsheet\Helper\Sample;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment; 
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;  
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+
 class Transaction extends Mandiri_Controller {
 
     public function __construct()
@@ -29,6 +41,24 @@ class Transaction extends Mandiri_Controller {
         $this->load->view('transaction/form', $data);
     }
 
+	public function add_approval_detail(){
+		if($this->input->method() == "post"){
+    		$this->submit_approval_detail();
+    	}
+
+        $data['heading_title'] = 'Add Approval Detail';
+        $data['sidebars'] = $this->get_sidebar();
+        $data['sidebar_id'] = $this->sidebar_id;
+		$data['id'] = $this->input->get('id');
+        $data['params_error'] = $this->input->post();
+        
+        // Mengambil data card type untuk dropdown
+        $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
+        // Mengambil data lainnya jika diperlukan, misalnya payment_type, dll.
+
+        $this->load->view('transaction/approval_form', $data);
+	}
+
     public function index()
     {
         $data['heading_title'] = 'Cashback Voucher Transaction';
@@ -45,8 +75,256 @@ class Transaction extends Mandiri_Controller {
     }
 
     public function export(){
+		$spreadsheet = new Spreadsheet();
 
+		$cellStyle = array(
+			'borders' => array(
+				'outline' => array(
+					'borderStyle' => Border::BORDER_THIN,
+					'color' => array('argb' => '000000'),
+				),
+			)
+		);
+
+        $titleRow = [
+            'font' => [
+                'color' =>[
+                    'rgb' =>'FFFFFF'
+                ],
+                'bold' =>true,
+                'size' =>15
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'rgb' => '808080'
+                ]
+                ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+        ];
+
+        $summaryRow = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'rgb' => 'FFE70A'
+                ]
+                ],
+            'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+                ],
+		];
+		
+		$bold = [
+            'font' => [
+                'color'=>[
+                    'rgb'=>'000000'
+                ],
+                'bold'=>true,
+                'size'=>11
+            ]
+        ]; 
+
+        $tableHead = [
+            'font' => [
+                'color'=>[
+                    'rgb'=>'000000'
+                ],
+                'bold'=>true,
+                'size'=>11
+            ],
+            'fill'=>[
+                'fillType' => FILL::FILL_SOLID,
+                'startColor' => [
+                    'rgb' => 'd8d8d8'
+                ]   
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+        ];
+
+		$row_counter = 5;
+
+        $spreadsheet->getActiveSheet()
+					->setCellValue('A2', "REKAP PROGRAM DISKON MANDIRI TRAVEL DEALS @GANDARIA CITY PERIOD 06-10MAR'24")
+					->setCellValue('A'.$row_counter, 'No')
+					->setCellValue('B'.$row_counter, 'Tanggal Transaksi')
+					->setCellValue('C'.$row_counter, 'Nama Pemegang Kartu')
+					->setCellValue('D'.$row_counter, 'No Kartu Kredit')
+					->setCellValue('E'.$row_counter, 'Tenor Transaksi Cicilan')
+					->setCellValue('F'.$row_counter, 'Approval Code')
+					->setCellValue('G'.$row_counter, 'Nilai Transaksi')
+					->setCellValue('H'.$row_counter, 'Nominal Diskon')
+					->setCellValue('I'.$row_counter, 'Nilai Transaksi Setelah Diskon')
+					->setCellValue('J'.$row_counter, 'No Invoice/TTU');
+
+		$spreadsheet->getActiveSheet()->mergeCells("A2:J2");
+
+		$spreadsheet->getActiveSheet()->getStyle("A2")->applyFromArray($bold);
+
+		$spreadsheet->getActiveSheet()
+					->getRowDimension(2)
+					->setRowHeight(40.25);
+
+		$spreadsheet->getActiveSheet()->getStyle("A2")->getAlignment()->setHorizontal('center')->setVertical('center');
+
+		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("C".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("D".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("E".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("J".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("C".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("D".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("E".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("J".$row_counter)->applyFromArray($cellStyle);
+
+		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter.":J".$row_counter)->getAlignment()->setHorizontal('center')->setVertical('center');
+
+		$spreadsheet->getActiveSheet()
+					->getRowDimension($row_counter)
+					->setRowHeight(30.25);
+
+		$row_counter++;
+
+		$first_row = 0;
+
+		$last_row = 0;
+		$transaction_list = $this->Customer_details_model->get_transaction($this->input->get());
+
+		for ($b=0; $b < count($transaction_list); $b++) {
+			if($b == 0){
+				$first_row = $row_counter;
+			}
+
+			if($b == count($transaction_list) - 1){
+				$last_row = $row_counter;
+			}
+
+			$spreadsheet->getActiveSheet()
+						->setCellValue('A'.$row_counter, ($b+1))
+						->setCellValue('B'.$row_counter, (($transaction_list[$b]['created_at'] != "" && $transaction_list[$b]['created_at'] != NULL) ? \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime($transaction_list[$b]['created_at'])) : ""))
+						->setCellValue('C'.$row_counter, $transaction_list[$b]['name_customer'])
+						->setCellValue('D'.$row_counter, $transaction_list[$b]['card_number'])
+						->setCellValue('E'.$row_counter, $transaction_list[$b]['installment_period'])
+						->setCellValue('F'.$row_counter, $transaction_list[$b]['approval_code'])
+						->setCellValue('G'.$row_counter, $transaction_list[$b]['transaction_amount'])
+						->setCellValue('H'.$row_counter, $transaction_list[$b]['customer_cashback'])
+						->setCellValue('I'.$row_counter, "=(G".$row_counter." - H".$row_counter.")")
+						->setCellValue('J'.$row_counter, $transaction_list[$b]['invoice_number']);
+						
+			if($transaction_list[$b]['created_at'] != "" && $transaction_list[$b]['created_at'] != NULL){
+				$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->getNumberFormat()->setFormatCode('dd MMM yyyy H:mm:s');
+			}
+
+			$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("C".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("D".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("E".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($cellStyle);
+			$spreadsheet->getActiveSheet()->getStyle("J".$row_counter)->applyFromArray($cellStyle);
+
+			$spreadsheet->getActiveSheet()
+						->getStyle("G".$row_counter.":I".$row_counter)
+						->getNumberFormat()
+						->setFormatCode('#,##0');
+
+			$spreadsheet->getActiveSheet()
+						->getRowDimension($row_counter)
+						->setRowHeight(20.25);
+
+			$spreadsheet->getActiveSheet()->getStyle("A".$row_counter.":J".$row_counter)->getAlignment()->setVertical('center');
+			$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->getAlignment()->setHorizontal('center');
+
+			$row_counter++;
+		}
+
+		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->getAlignment()->setHorizontal('center')->setVertical('center');
+		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter.":I".$row_counter)->getAlignment()->setVertical('center');
+		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("F".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("G".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("H".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("I".$row_counter)->applyFromArray($cellStyle);
+		$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($bold);
+		$spreadsheet->getActiveSheet()
+					->getRowDimension($row_counter)
+					->setRowHeight(20.25);
+
+		$spreadsheet->getActiveSheet()
+					->setCellValue('A'.$row_counter, 'TOTAL TRANSAKSI')
+					->setCellValue('G'.$row_counter, '=SUM(G'.$first_row.':G'.$last_row.')')
+					->setCellValue('H'.$row_counter, '=SUM(H'.$first_row.':H'.$last_row.')')
+					->setCellValue('I'.$row_counter, '=SUM(I'.$first_row.':I'.$last_row.')')
+					->mergeCells("A".$row_counter.":F".$row_counter);
+		
+		$spreadsheet->getActiveSheet()
+					->getStyle("G".$row_counter.":I".$row_counter)
+					->getNumberFormat()
+					->setFormatCode('#,##0');
+		
+
+		$spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);		
+
+		$spreadsheet->getActiveSheet()->setTitle('Rekap Diskon Mandiri-'.date('d-m-Y'));
+		$spreadsheet->setActiveSheetIndex(0);
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment;filename="Rekap Diskon Mandiri'.date('dmYHi').'.xlsx"');
+		header('Cache-Control: max-age=0');
+		header('Cache-Control: max-age=1');
+		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+		$writer->save('php://output'); 
+		exit;
     }
+
+	private function submit_approval_detail(){
+		$this->form_validation->set_rules('approval_code', 'Approval Code', 'required');
+        $this->form_validation->set_rules('invoice_number', 'Invoice Number', 'required');
+        $this->form_validation->set_rules('installment_period', 'Installment Period', 'required');
+
+		if ($this->form_validation->run() === FALSE) {
+			$errors = $this->form_validation->error_string(); 
+			$this->session->set_flashdata('errors', $errors);
+		}else{
+			$transactionData = [
+                'approval_code' => $this->input->post('approval_code'),
+                'invoice_number' => $this->input->post('invoice_number'),
+				'installment_period' => $this->input->post('installment_period')
+            ];
+
+			$this->Customer_details_model->update_customer_details($this->input->post('id'), $transactionData);
+
+			$this->session->set_flashdata('success', 'Approval data has been successfully updated!');
+
+			redirect('transaction');
+		}
+	}
 
     private function submit_transaction()
     {
@@ -112,6 +390,34 @@ class Transaction extends Mandiri_Controller {
 		echo $optionsHtml;
 	}
 
+	public function reject(){
+		$id = $this->input->get('id');
+
+		if($id != null){
+			$reject_flag = $this->Customer_details_model->update_customer_details($id, array('approval_status' => 0));
+
+			$customer_detail = $this->Customer_details_model->get_transaction_by_id($id);
+
+			if(!empty($customer_detail)){
+				$cashback_id = $customer_detail['cashback_id'];
+
+				$cashback_detail = $this->Cashback_offer_model->get_cashback_offer_by_id($cashback_id);
+
+				$total_quota = $cashback_detail['total_quota'];
+
+				$sold_quota = count($this->Customer_details_model->get_transaction(array('cashback' => $cashback_id)));
+
+				$total_quota -= $sold_quota;
+
+				$this->Cashback_offer_model->update_cashback_offer($cashback_id, array('available_quota' => ($total_quota - $sold_quota)));
+
+				$this->session->set_flashdata('success', 'Data has been successfully rejected!');
+			}
+		}
+
+		redirect('transaction');
+	}
+
 	public function validate_id_number($id_number) {
 		if($id_number != NULL && $id_number != ""){
 			$transaction_data = $this->Customer_details_model->get_transaction_by_id_number($id_number);
@@ -127,10 +433,26 @@ class Transaction extends Mandiri_Controller {
 				$this->form_validation->set_message('validate_id_number', 'You can only submit twice in an exhibition period for the same ID Number.');
 				return FALSE;
 			}
+		}		
+	
+		return TRUE;
+	}
+
+	public function validate_cashback($cashback){
+		if($cashback != ""){
+			$cashback = explode('|', $cashback)[1];
+			$cashback_detail = $this->Cashback_offer_model->get_cashback_offer_by_id($cashback);
+
+			$is_closed = $cashback_detail['is_closed'];
+			$available_quota = $cashback_detail['available_quota'];
+
+			if($available_quota == 0 || $is_closed == 1){
+				$this->form_validation->set_message('validate_cashback', 'There is no quota for this cashback');
+
+				return FALSE;
+			}
 		}
 		
-		
-	
 		return TRUE;
 	}
 
