@@ -14,11 +14,11 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>Invoice Number</small></label>
-                        <input type="text" name="invoice_number" class="form-control" placeholder="Invoice Number" value="<?php echo (isset($params_error['invoice_number']) && !empty($params_error['invoice_number']) ? $params_error['invoice_number'] : "")?>">
+                        <input type="text" name="invoice_number" class="form-control upper-case-input" placeholder="Invoice Number" value="<?php echo (isset($params_error['invoice_number']) && !empty($params_error['invoice_number']) ? $params_error['invoice_number'] : "")?>">
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>Approval Code</small></label>
-                        <input type="text" name="approval_code" class="form-control" value="<?php echo (isset($params_error['approval_code']) && !empty($params_error['approval_code']) ? $params_error['approval_code'] : "")?>" placeholder="Approval Code">
+                        <input type="text" name="approval_code" class="form-control upper-case-input" value="<?php echo (isset($params_error['approval_code']) && !empty($params_error['approval_code']) ? $params_error['approval_code'] : "")?>" placeholder="Approval Code">
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>Installment Period</small></label>

@@ -27,4 +27,8 @@ $(document).ready(function() {
         var selectedCashback = $(this).find('option:selected').val();
         $('#cashback_value').val(selectedCashback);
     });
+
+    $('.upper-case-input').on('keyup', function(){
+        $(this).val($(this).val().toUpperCase());
+    });
 });
