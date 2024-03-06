@@ -44,8 +44,10 @@ $(document).ready(function() {
         var private_input_type = $(this).parent().siblings('.private-input-only').css('-webkit-text-security');
 
         if(private_input_type == "square"){
+            $(this).html('<i class="fa fa-eye-slash"></i>');
             $(this).parent().siblings('.private-input-only').css('-webkit-text-security','none')
         }else{
+            $(this).html('<i class="fa fa-eye"></i>');
             $(this).parent().siblings('.private-input-only').css('-webkit-text-security','square')
         }
     })
