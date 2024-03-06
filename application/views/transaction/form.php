@@ -21,7 +21,7 @@
                     </div>
                     <div class="col-sm-12">
                         <label for=""><small>Customer Name</small></label>
-                        <input type="text" name="customer_name" class="form-control" placeholder="Customer Name" value="<?php echo (isset($params_error['customer_name']) && !empty($params_error['customer_name']) ? $params_error['customer_name'] : "")?>">
+                        <input type="text" name="customer_name" class="form-control upper-case-input" placeholder="Customer Name" value="<?php echo (isset($params_error['customer_name']) && !empty($params_error['customer_name']) ? $params_error['customer_name'] : "")?>" autocomplete="off">
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>Customer Email</small></label>
