@@ -19,7 +19,10 @@ class Customer_details_model extends CI_Model {
 
 	public function get_transaction_by_id_number($id_number) {
 		$this->db->where('id_number', $id_number);
+        $this->db->group_start();
         $this->db->where('customer_details.approval_status',1);
+        $this->db->or_where('customer_details.approval_status IS NULL');
+        $this->db->group_end();
 		$this->db->from('customer_details');
 		$this->db->order_by('created_at','DESC');
 		return $this->db->get()->result_array();
