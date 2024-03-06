@@ -13,11 +13,21 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>ID Number</small></label>
-                        <input type="text" name="id_number" class="form-control" value="<?php echo (isset($params_error['id_number']) && !empty($params_error['id_number']) ? $params_error['id_number'] : "")?>" placeholder="ID Card">
+                        <div class="input-group">
+                            <input type="text" style="-webkit-text-security: square;" name="id_number" class="form-control private-input-only" value="<?php echo (isset($params_error['id_number']) && !empty($params_error['id_number']) ? $params_error['id_number'] : "")?>" autocomplete="off" placeholder="ID Card">
+                            <div class="input-group-append">
+                                <span class="input-group-text seen_value_button" id="inputGroup-sizing-default"><i class="fa fa-eye"></i></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>Card Number</small></label>
-                        <input type="text" name="card_number" class="form-control" placeholder="Card Number" value="<?php echo (isset($params_error['card_number']) && !empty($params_error['card_number']) ? $params_error['card_number'] : "")?>">
+                        <div class="input-group">
+                            <input type="text" style="-webkit-text-security: square;" name="card_number" class="form-control private-input-only" placeholder="Card Number" value="<?php echo (isset($params_error['card_number']) && !empty($params_error['card_number']) ? $params_error['card_number'] : "")?>" autocomplete="off">
+                            <div class="input-group-append">
+                                <span class="input-group-text seen_value_button" id="inputGroup-sizing-default"><i class="fa fa-eye"></i></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-12">
                         <label for=""><small>Customer Name</small></label>
@@ -25,7 +35,7 @@
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>Customer Email</small></label>
-                        <input type="email" name="customer_email" class="form-control" placeholder="Customer Email" value="<?php echo (isset($params_error['customer_email']) && !empty($params_error['customer_email']) ? $params_error['customer_email'] : "")?>">
+                        <input type="email" name="customer_email" class="form-control" placeholder="Customer Email" value="<?php echo (isset($params_error['customer_email']) && !empty($params_error['customer_email']) ? $params_error['customer_email'] : "")?>" autocomplete="off">
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>Customer Phone Number</small></label>
@@ -33,7 +43,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroup-sizing-sm">+62</span>
                             </div>
-                            <input type="text" name="customer_phone" class="form-control" placeholder="Customer Phone Number" value="<?php echo (isset($params_error['customer_phone']) && !empty($params_error['customer_phone']) ? $params_error['customer_phone'] : "")?>">
+                            <input type="text" name="customer_phone" class="form-control" placeholder="Customer Phone Number" value="<?php echo (isset($params_error['customer_phone']) && !empty($params_error['customer_phone']) ? $params_error['customer_phone'] : "")?>" autocomplete="off">
                         </div>
                         
                     </div>
