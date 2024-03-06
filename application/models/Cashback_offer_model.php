@@ -19,9 +19,9 @@ class Cashback_offer_model extends CI_Model {
     // Mendapatkan semua penawaran cashback
     public function get_all_cashback_offers()
     {
-    	$this->db->select('cashback_offer.*, master_card_type.master_card_name');
-    	$this->db->from('cashback_offer');
-    	$this->db->join('master_card_type','master_card_type.master_card_id = cashback_offer.master_card_id');
+        $this->db->select('cashback_offer.*, master_card_type.master_card_name');
+        $this->db->from('cashback_offer');
+        $this->db->join('master_card_type','master_card_type.master_card_id = cashback_offer.master_card_id');
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -45,17 +45,20 @@ class Cashback_offer_model extends CI_Model {
 		$this->db->from('cashback_offer');
 		
 		if($cardType != null){
-			$this->db->where('master_card_id', $cardType);
+			$this->db->where('master_card_id', (int)$cardType);
 		}		
 		
 		if($transactionAmount != null){
-			$this->db->where('min_transaction <=', $transactionAmount);
+			$this->db->where('min_transaction <=', (int)$transactionAmount);
 		}
 
 		if($isClosedFlag == "0" || $isClosedFlag == "1"){
-			$this->db->where('is_closed', $isClosedFlag);
+			$this->db->where('is_closed', (int)$isClosedFlag);
 		}
 		
+        $this->db->order_by('cashback_offer.min_transaction','DESC');
+        $this->db->limit(1,0);
+
 		$query = $this->db->get();
 		$result = $query->result_array();
 		
