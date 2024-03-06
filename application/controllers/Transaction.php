@@ -298,9 +298,9 @@ class Transaction extends Mandiri_Controller {
 
 		$spreadsheet->getActiveSheet()
 					->setCellValue('A'.$row_counter, 'TOTAL TRANSAKSI')
-					->setCellValue('G'.$row_counter, '=SUM(G'.$first_row.':G'.$last_row.')')
-					->setCellValue('H'.$row_counter, '=SUM(H'.$first_row.':H'.$last_row.')')
-					->setCellValue('I'.$row_counter, '=SUM(I'.$first_row.':I'.$last_row.')')
+					->setCellValue('G'.$row_counter, (count($transaction_list) == 0 ? '' : '=SUM(G'.$first_row.':G'.$last_row.')'))
+					->setCellValue('H'.$row_counter, (count($transaction_list) == 0 ? '' : '=SUM(H'.$first_row.':H'.$last_row.')'))
+					->setCellValue('I'.$row_counter, (count($transaction_list) == 0 ? '' : '=SUM(I'.$first_row.':I'.$last_row.')'))
 					->mergeCells("A".$row_counter.":F".$row_counter);
 		
 		$spreadsheet->getActiveSheet()
