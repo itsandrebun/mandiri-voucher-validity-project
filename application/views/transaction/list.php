@@ -67,7 +67,7 @@
                                     <td class="text-center" style="vertical-align:middle;"><?php echo "+62".$transaction_list[$b]['phone_number'];?></td>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['email'];?></td>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['master_card_name'];?></td>
-                                    <td class="text-center" style="vertical-align:middle;">Full Payment</td>
+                                    <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['payment_type'] == "full" ? "Full Payment" : "Cicilan";?></td>
                                     <td class="text-right" style="vertical-align:middle;"><?php echo number_format($transaction_list[$b]['transaction_amount'],0,",",".");?></td>
                                     <td class="text-right" style="vertical-align:middle;"><?php echo number_format($transaction_list[$b]['customer_cashback'],0,",",".");?></td>
                                     <td class="text-center" style="vertical-align:middle;">

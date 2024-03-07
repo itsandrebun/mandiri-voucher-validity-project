@@ -75,6 +75,8 @@ class Transaction extends Mandiri_Controller {
     }
 
     public function export(){
+		date_default_timezone_set('Asia/Jakarta');
+
 		$spreadsheet = new Spreadsheet();
 
 		$cellStyle = array(
@@ -216,7 +218,7 @@ class Transaction extends Mandiri_Controller {
 
 			$spreadsheet->getActiveSheet()
 						->setCellValue('A'.$row_counter, ($b+1))
-						->setCellValue('B'.$row_counter, (($transaction_list[$b]['created_at'] != "" && $transaction_list[$b]['created_at'] != NULL) ? \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime($transaction_list[$b]['created_at'])) : ""))
+						->setCellValue('B'.$row_counter, (($transaction_list[$b]['transaction_date'] != "" && $transaction_list[$b]['transaction_date'] != NULL) ? \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime($transaction_list[$b]['transaction_date'])) : ""))
 						->setCellValue('C'.$row_counter, $transaction_list[$b]['name_customer'])
 						->setCellValue('D'.$row_counter, $transaction_list[$b]['card_number'])
 						->setCellValue('E'.$row_counter, $transaction_list[$b]['installment_period'])
@@ -225,9 +227,9 @@ class Transaction extends Mandiri_Controller {
 						->setCellValue('H'.$row_counter, $transaction_list[$b]['customer_cashback'])
 						->setCellValue('I'.$row_counter, "=(G".$row_counter." - H".$row_counter.")")
 						->setCellValue('J'.$row_counter, $transaction_list[$b]['invoice_number']);
-						
-			if($transaction_list[$b]['created_at'] != "" && $transaction_list[$b]['created_at'] != NULL){
-				$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->getNumberFormat()->setFormatCode('dd MMM yyyy H:mm:s');
+			
+			if($transaction_list[$b]['transaction_date'] != "" && $transaction_list[$b]['transaction_date'] != NULL){
+				$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->getNumberFormat()->setFormatCode('dd MMM yyyy Hh:mm:ss');
 			}
 
 			$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($cellStyle);
@@ -463,7 +465,7 @@ class Transaction extends Mandiri_Controller {
 			$transaction_data = $this->Customer_details_model->get_transaction_by_id_number($id_number);
 		
 			if(count($transaction_data) == 1){
-				$last_transaction_date = date('Y-m-d',strtotime($transaction_data[0]['created_at']));
+				$last_transaction_date = date('Y-m-d',strtotime($transaction_data[0]['transaction_date']));
 				$transaction_date = date('Y-m-d');
 				if($transaction_date == $last_transaction_date){
 					$this->form_validation->set_message('validate_id_number', 'You can only submit once a day for the same ID Number.');
