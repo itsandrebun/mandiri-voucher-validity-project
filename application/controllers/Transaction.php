@@ -394,7 +394,9 @@ class Transaction extends Mandiri_Controller {
 				'master_card_id' => $this->input->post('card_type'),
                 'payment_type' => $this->input->post('payment_type'),
                 'cashback_id' => explode('|',$this->input->post('cashback'))[1],
-				'customer_cashback' => explode('|',$this->input->post('cashback_value'))[0]
+				'customer_cashback' => explode('|',$this->input->post('cashback_value'))[0],
+				'transaction_date' => date('Y-m-d H:i:s', time()),
+				'created_at' => date('Y-m-d H:i:s', time())
             ];
 
 			$this->Customer_details_model->add_customer_details($transactionData);
@@ -412,7 +414,6 @@ class Transaction extends Mandiri_Controller {
 			redirect('transaction');  
         }
     }
-
 
 	public function getCashbackOptions() {
 		$cardType = $this->input->post('card_type');
