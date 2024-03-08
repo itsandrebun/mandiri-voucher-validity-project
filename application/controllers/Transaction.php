@@ -75,6 +75,8 @@ class Transaction extends Mandiri_Controller {
     }
 
     public function export(){
+    	date_default_timezone_set('UTC');
+
 		date_default_timezone_set('Asia/Jakarta');
 
 		$spreadsheet = new Spreadsheet();
@@ -228,7 +230,7 @@ class Transaction extends Mandiri_Controller {
 						->setCellValue('I'.$row_counter, "=(G".$row_counter." - H".$row_counter.")")
 						->setCellValue('J'.$row_counter, $transaction_list[$b]['invoice_number']);
 			
-			if($transaction_list[$b]['transaction_date'] != "" && $transaction_list[$b]['transaction_date'] != NULL){
+			if($transaction_list[$b]['transaction_date'] != "" && $transaction_list[$b]['transaction_date'] != null){
 				$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->getNumberFormat()->setFormatCode('dd MMM yyyy Hh:mm:ss');
 			}
 
@@ -370,11 +372,19 @@ class Transaction extends Mandiri_Controller {
     private function submit_transaction()
     {
         // Validasi input form
+        $id_card_validation = 'required';
+
+        $skip_cashback_validation_flag = $this->input->post('skip_cashback_validation_flag');
+        
+        if($skip_cashback_validation_flag == "no"){
+        	$id_card_validation .= '|callback_validate_id_number';
+        }
+
         $this->form_validation->set_rules('customer_name', 'Customer Name', 'required');
         $this->form_validation->set_rules('customer_phone', 'Customer Phone Number', 'required');
         $this->form_validation->set_rules('customer_email', 'Customer Email', 'callback_validate_email');
         $this->form_validation->set_rules('card_number', 'Card Number', 'required');
-		$this->form_validation->set_rules('id_number', 'ID Number', 'required|callback_validate_id_number');
+		$this->form_validation->set_rules('id_number', 'ID Number', $id_card_validation);
 		$this->form_validation->set_rules('transaction_nominal', 'Transaction Amount', 'required');
 		$this->form_validation->set_rules('card_type', 'Card Type', 'required');
 		$this->form_validation->set_rules('payment_type', 'Payment Type', 'required');
