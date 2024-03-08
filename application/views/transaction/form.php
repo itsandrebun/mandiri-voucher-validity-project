@@ -11,6 +11,15 @@
             <h2>Cashback Voucher Validity</h2>
             <form method="POST" action="<?php echo base_url() . 'transaction/add' ?>">
                 <div class="row">
+                    <div class="col-sm-12">
+                        <label for=""><small>Skip ID Card Validation</small></label>
+                        <div class="input-group">
+                            <select class="form-control" name="skip_cashback_validation_flag">
+                                <option value="yes" <?php echo (isset($params_error['skip_cashback_validation_flag']) && !empty($params_error['skip_cashback_validation_flag']) && $params_error['skip_cashback_validation_flag'] == "yes" ? "selected" : "")?>>Yes</option>
+                                <option value="no" <?php echo (!isset($params_error['skip_cashback_validation_flag']) || (isset($params_error['skip_cashback_validation_flag']) && !empty($params_error['skip_cashback_validation_flag']) && $params_error['skip_cashback_validation_flag'] == "no") ? "selected" : "")?>>No</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-md-6 col-sm-12">
                         <label for=""><small>ID Number</small></label>
                         <div class="input-group">
