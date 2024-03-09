@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="float-right">
-                    <button type="button" class="btn btn-primary" onclick="$('input').val('');"><i class="fa fa-search"></i> Clear</button>
+                    <button type="button" class="btn btn-default" onclick="$('input').val('');"> Clear</button>
                     <button type="button" class="btn btn-primary" onclick="$('#transaction_filter_form').submit();"><i class="fa fa-search"></i> Filter</button>
                 </div>
             </form>
