@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-md-6">
                     <a role="button" href="<?php echo base_url () . 'transaction/add';?>" class="btn btn-primary float-right text-white ml-2"><i class="fa fa-plus"></i> Add</a>
-                    <a role="button" href="<?php echo base_url () . 'transaction/export';?>" class="btn btn-primary float-right text-white"><i class="fa fa-download"></i> Export</a>
+                    <a role="button" href="<?php echo $export_url;?>" class="btn btn-primary float-right text-white"><i class="fa fa-download"></i> Export</a>
                 </div>
             </div>
 
@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="float-right">
-                    <button type="button" class="btn btn-primary" onclick="$('input').val('');"><i class="fa fa-search"></i> Clear</button>
+                    <button type="button" class="btn btn-default" onclick="$('input').val('');"> Clear</button>
                     <button type="button" class="btn btn-primary" onclick="$('#transaction_filter_form').submit();"><i class="fa fa-search"></i> Filter</button>
                 </div>
             </form>
@@ -59,7 +59,7 @@
                     <tbody>
                         <?php if(isset($transaction_list) && !empty($transaction_list)){?>
                             <?php for($b = 0; $b < count($transaction_list); $b++){?>
-                                <tr>
+                                <tr <?php echo ($transaction_list[$b]['approval_status'] == null ? "class='table-warning'" : "");?>>
                                     <td class="text-center" style="vertical-align:middle"><?php echo date('d M Y H:i:s',strtotime($transaction_list[$b]['created_at']))?></td>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['id_number'];?></td>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['card_number'];?></td>

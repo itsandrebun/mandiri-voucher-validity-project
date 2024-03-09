@@ -61,11 +61,24 @@ class Transaction extends Mandiri_Controller {
 
     public function index()
     {
+		$query_string = array();
+		
         $data['heading_title'] = 'Cashback Voucher Transaction';
         $data['sidebars'] = $this->get_sidebar();
         $data['sidebar_id'] = $this->sidebar_id;
         $data['params_get'] = $this->input->get();
+		if(isset($data['params_get']['transaction_start_date']) && $data['params_get']['transaction_start_date'] != ""){
+			$query_string[] = "transaction_start_date=".$data['params_get']['transaction_start_date'];
+		}
+
+		if(isset($data['params_get']['transaction_end_date']) && $data['params_get']['transaction_end_date'] != ""){
+			$query_string[] = "transaction_end_date=".$data['params_get']['transaction_end_date'];
+		}
+
+		$query_string = count($query_string) > 0 ? implode("&",$query_string) : "";
+
         $data['transaction_list'] = $this->Customer_details_model->get_transaction($data['params_get']);
+		$data['export_url'] = base_url() . 'transaction/export?'.($query_string);
         
         // Mengambil data card type untuk dropdown
         $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
@@ -220,7 +233,7 @@ class Transaction extends Mandiri_Controller {
 
 			$spreadsheet->getActiveSheet()
 						->setCellValue('A'.$row_counter, ($b+1))
-						->setCellValue('B'.$row_counter, (($transaction_list[$b]['transaction_date'] != "" && $transaction_list[$b]['transaction_date'] != NULL) ? \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime($transaction_list[$b]['transaction_date'])) : ""))
+						->setCellValue('B'.$row_counter, (($transaction_list[$b]['transaction_date'] != "" && $transaction_list[$b]['transaction_date'] != NULL) ? \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime('+7 hours', strtotime($transaction_list[$b]['transaction_date']))) : ""))
 						->setCellValue('C'.$row_counter, $transaction_list[$b]['name_customer'])
 						->setCellValue('D'.$row_counter, $transaction_list[$b]['card_number'])
 						->setCellValue('E'.$row_counter, $transaction_list[$b]['installment_period'])
