@@ -59,7 +59,7 @@
                     <tbody>
                         <?php if(isset($transaction_list) && !empty($transaction_list)){?>
                             <?php for($b = 0; $b < count($transaction_list); $b++){?>
-                                <tr>
+                                <tr <?php echo ($transaction_list[$b]['approval_status'] == null ? "class='table-warning'" : "");?>>
                                     <td class="text-center" style="vertical-align:middle"><?php echo date('d M Y H:i:s',strtotime($transaction_list[$b]['created_at']))?></td>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['id_number'];?></td>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo $transaction_list[$b]['card_number'];?></td>

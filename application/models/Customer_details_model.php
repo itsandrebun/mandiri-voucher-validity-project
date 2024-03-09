@@ -48,7 +48,8 @@ class Customer_details_model extends CI_Model {
 
         $this->db->join('master_card_type','master_card_type.master_card_id = customer_details.master_card_id','left');
         $this->db->from('customer_details');
-        $this->db->select('customer_details.id_customer_details, customer_details.name_customer, customer_details.card_number, customer_details.id_number, customer_details.email, customer_details.email, customer_details.phone_number, customer_details.master_card_id, master_card_type.master_card_name, customer_details.cashback_id, customer_details.customer_cashback, customer_details.transaction_amount, customer_details.installment_period, customer_details.approval_code, customer_details.invoice_number, customer_details.approval_status, customer_details.payment_type, customer_details.transaction_date, customer_details.created_at');
+        $this->db->select('customer_details.id_customer_details, customer_details.name_customer, customer_details.card_number, customer_details.id_number, customer_details.email, customer_details.email, customer_details.phone_number, customer_details.master_card_id, master_card_type.master_card_name, customer_details.cashback_id, customer_details.customer_cashback, customer_details.transaction_amount, customer_details.installment_period, customer_details.approval_code, customer_details.invoice_number, (SELECT CASE WHEN customer_details.approval_status IS NULL THEN NULL ELSE "NOT NULL" END) AS converted_approval_status,customer_details.approval_status, customer_details.payment_type, customer_details.transaction_date, customer_details.created_at');
+        $this->db->order_by('customer_details.approval_status','ASC');
         $this->db->order_by('customer_details.transaction_date','DESC');
         return $this->db->get()->result_array();
     }
