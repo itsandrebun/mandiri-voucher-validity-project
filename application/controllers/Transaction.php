@@ -75,6 +75,10 @@ class Transaction extends Mandiri_Controller {
 			$query_string[] = "transaction_end_date=".$data['params_get']['transaction_end_date'];
 		}
 
+		if(isset($data['params_get']['approval_status']) && $data['params_get']['approval_status'] != ""){
+			$query_string[] = "approval_status=".$data['params_get']['approval_status'];
+		}
+
 		$query_string = count($query_string) > 0 ? implode("&",$query_string) : "";
 
         $data['transaction_list'] = $this->Customer_details_model->get_transaction($data['params_get']);

@@ -37,14 +37,24 @@ class Customer_details_model extends CI_Model {
             $this->db->where('DATE_FORMAT(customer_details.transaction_date, "%Y-%m-%d") <= "'.$params['transaction_end_date'].'"');
         }
 
+        if(isset($params['approval_status']) && $params['approval_status'] != "" && $params['approval_status'] != "all"){
+            if($params['approval_status'] == "all"){
+                $this->db->group_start();
+                $this->db->where('customer_details.approval_status',1);
+                $this->db->or_where('customer_details.approval_status IS NULL');
+                $this->db->group_end();
+            }else if($params['approval_status'] == "need_approval"){
+                $this->db->where('customer_details.approval_status IS NULL');
+            }else{
+                $this->db->where('customer_details.approval_status', (int)$params['approval_status']);
+            }
+        }
+
         if(isset($params['cashback']) && $params['cashback'] != ""){
             $this->db->where('customer_details.cashback_id = "'.$params['cashback'].'"');
         }
 
-        $this->db->group_start();
-        $this->db->where('customer_details.approval_status',1);
-        $this->db->or_where('customer_details.approval_status IS NULL');
-        $this->db->group_end();
+        
 
         $this->db->join('master_card_type','master_card_type.master_card_id = customer_details.master_card_id','left');
         $this->db->from('customer_details');
