@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-md-6">
                     <a role="button" href="<?php echo base_url () . 'transaction/add';?>" class="btn btn-primary float-right text-white ml-2"><i class="fa fa-plus"></i> Add</a>
-                    <a role="button" href="<?php echo base_url () . 'transaction/export';?>" class="btn btn-primary float-right text-white"><i class="fa fa-download"></i> Export</a>
+                    <a role="button" href="<?php echo $export_url;?>" class="btn btn-primary float-right text-white"><i class="fa fa-download"></i> Export</a>
                 </div>
             </div>
 

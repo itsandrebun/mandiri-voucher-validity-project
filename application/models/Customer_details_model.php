@@ -30,11 +30,11 @@ class Customer_details_model extends CI_Model {
 
     public function get_transaction($params = array()){
         if(isset($params['transaction_start_date']) && $params['transaction_start_date'] != ""){
-            $this->db->where('customer_details.transaction_date >= "'.$params['transaction_start_date'].'"');
+            $this->db->where('DATE_FORMAT(customer_details.transaction_date, "%Y-%m-%d") >= "'.$params['transaction_start_date'].'"');
         }
 
         if(isset($params['transaction_end_date']) && $params['transaction_end_date'] != ""){
-            $this->db->where('customer_details.transaction_date <= "'.$params['transaction_end_date'].'"');
+            $this->db->where('DATE_FORMAT(customer_details.transaction_date, "%Y-%m-%d") <= "'.$params['transaction_end_date'].'"');
         }
 
         if(isset($params['cashback']) && $params['cashback'] != ""){
