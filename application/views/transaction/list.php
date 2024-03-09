@@ -32,9 +32,20 @@
                             <input type="date" name="transaction_end_date" class="form-control" id="" value="<?php echo (isset($params_get['transaction_end_date']) && !empty($params_get['transaction_end_date']) ? $params_get['transaction_end_date'] : '');?>">
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="" class="col-sm-label"><small>Approval Status</small></label>
+                            <select name="approval_status" id="approval_status" class="form-control">
+                                <option value="all" <?php echo (!isset($params_get['approval_status']) || (isset($params_get['approval_status']) && $params_get['approval_status'] == "all") ? "selected" : "");?>>All</option>
+                                <option value="need_approval" <?php echo (isset($params_get['approval_status']) && $params_get['approval_status'] == "need_approval" ? "selected" : "");?>>Need Approval</option>
+                                <option value="1" <?php echo (isset($params_get['approval_status']) && $params_get['approval_status'] == 1 ? "selected" : "");?>>Approved</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="float-right">
-                    <button type="button" class="btn btn-default" onclick="$('input').val('');"> Clear</button>
+                    <button type="button" class="btn btn-default" onclick="$('input').val('');$('select#approval_status').val('all')"> Clear</button>
                     <button type="button" class="btn btn-primary" onclick="$('#transaction_filter_form').submit();"><i class="fa fa-search"></i> Filter</button>
                 </div>
             </form>
