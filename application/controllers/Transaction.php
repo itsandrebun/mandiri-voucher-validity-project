@@ -67,11 +67,11 @@ class Transaction extends Mandiri_Controller {
         $data['sidebars'] = $this->get_sidebar();
         $data['sidebar_id'] = $this->sidebar_id;
         $data['params_get'] = $this->input->get();
-		if($data['params_get']['transaction_start_date'] != ""){
+		if(isset($data['params_get']['transaction_start_date']) && $data['params_get']['transaction_start_date'] != ""){
 			$query_string[] = "transaction_start_date=".$data['params_get']['transaction_start_date'];
 		}
 
-		if($data['params_get']['transaction_end_date'] != ""){
+		if(isset($data['params_get']['transaction_end_date']) && $data['params_get']['transaction_end_date'] != ""){
 			$query_string[] = "transaction_end_date=".$data['params_get']['transaction_end_date'];
 		}
 
