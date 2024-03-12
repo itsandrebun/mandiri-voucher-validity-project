@@ -49,9 +49,9 @@ class Transaction extends Mandiri_Controller {
         $data['heading_title'] = 'Approve';
         $data['sidebars'] = $this->get_sidebar();
         $data['sidebar_id'] = $this->sidebar_id;
-		$data['id'] = $this->input->get('id');
+		    $data['id'] = $this->input->get('id');
         $data['params_error'] = $this->input->post();
-		$data['transaction_detail'] = $this->Customer_details_model->get_transaction_by_id($data['id']);
+		    $data['transaction_detail'] = $this->Customer_details_model->get_transaction_by_id($data['id']);
 
         $this->load->view('transaction/approval_form', $data);
 	}
@@ -64,9 +64,9 @@ class Transaction extends Mandiri_Controller {
         $data['heading_title'] = 'Edit Approval Detail';
         $data['sidebars'] = $this->get_sidebar();
         $data['sidebar_id'] = $this->sidebar_id;
-		$data['id'] = $this->input->get('id');
+		    $data['id'] = $this->input->get('id');
         $data['params_error'] = $this->input->post();
-		$data['transaction_detail'] = $this->Customer_details_model->get_transaction_by_id($data['id']);
+		    $data['transaction_detail'] = $this->Customer_details_model->get_transaction_by_id($data['id']);
 
         $this->load->view('transaction/approval_form', $data);
 	}
@@ -244,12 +244,23 @@ class Transaction extends Mandiri_Controller {
 				$last_row = $row_counter;
 			}
 
+			$customer_card_number = $transaction_list[$b]['card_number'];
+			$customer_card_number = str_split($customer_card_number);
+
+			for ($c=0; $c < count($customer_card_number); $c++) { 
+				if($c % 4 == 0){
+					$customer_card_number[$c] = " ".$customer_card_number[$c];
+				}
+			}
+			
+			$customer_card_number = implode('',$customer_card_number);
+
 			$spreadsheet->getActiveSheet()
 						->setCellValue('A'.$row_counter, ($b+1))
 						->setCellValue('B'.$row_counter, (($transaction_list[$b]['transaction_date'] != "" && $transaction_list[$b]['transaction_date'] != NULL) ? \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(strtotime('+7 hours', strtotime($transaction_list[$b]['transaction_date']))) : ""))
 						->setCellValue('C'.$row_counter, $transaction_list[$b]['name_customer'])
-						->setCellValue('D'.$row_counter, $transaction_list[$b]['card_number'])
-						->setCellValue('E'.$row_counter, $transaction_list[$b]['installment_period'])
+						->setCellValue('D'.$row_counter, $customer_card_number)
+						->setCellValue('E'.$row_counter, ($transaction_list[$b]['installment_period'] == null ? "NO" : $transaction_list[$b]['installment_period']))
 						->setCellValue('F'.$row_counter, $transaction_list[$b]['approval_code'])
 						->setCellValue('G'.$row_counter, $transaction_list[$b]['transaction_amount'])
 						->setCellValue('H'.$row_counter, $transaction_list[$b]['customer_cashback'])
@@ -257,7 +268,7 @@ class Transaction extends Mandiri_Controller {
 						->setCellValue('J'.$row_counter, $transaction_list[$b]['invoice_number']);
 			
 			if($transaction_list[$b]['transaction_date'] != "" && $transaction_list[$b]['transaction_date'] != null){
-				$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->getNumberFormat()->setFormatCode('dd MMM yyyy Hh:mm:ss');
+				$spreadsheet->getActiveSheet()->getStyle("B".$row_counter)->getNumberFormat()->setFormatCode('dd MMM yyyy');
 			}
 
 			$spreadsheet->getActiveSheet()->getStyle("A".$row_counter)->applyFromArray($cellStyle);
@@ -394,6 +405,10 @@ class Transaction extends Mandiri_Controller {
 
 			if($this->input->post('installment_period') != "" && $this->input->post('installment_period') != null){
 				$transactionData['installment_period'] = $this->input->post('installment_period');
+			}
+
+			if($this->input->post('card_number') != "" && $this->input->post('card_number') != null){
+				$transactionData['card_number'] = $this->input->post('card_number');
 			}
 
 			$this->Customer_details_model->update_customer_details($this->input->post('id'), $transactionData);
