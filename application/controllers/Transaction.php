@@ -51,10 +51,22 @@ class Transaction extends Mandiri_Controller {
         $data['sidebar_id'] = $this->sidebar_id;
 		$data['id'] = $this->input->get('id');
         $data['params_error'] = $this->input->post();
-        
-        // Mengambil data card type untuk dropdown
-        $data['card_types'] = $this->Master_card_type_model->get_all_card_types();
-        // Mengambil data lainnya jika diperlukan, misalnya payment_type, dll.
+		$data['transaction_detail'] = $this->Customer_details_model->get_transaction_by_id($data['id']);
+
+        $this->load->view('transaction/approval_form', $data);
+	}
+
+	public function edit_approval_detail(){
+		if($this->input->method() == "post"){
+    		$this->submit_approval_detail('edit_approval_detail');
+    	}
+
+        $data['heading_title'] = 'Edit Approval Detail';
+        $data['sidebars'] = $this->get_sidebar();
+        $data['sidebar_id'] = $this->sidebar_id;
+		$data['id'] = $this->input->get('id');
+        $data['params_error'] = $this->input->post();
+		$data['transaction_detail'] = $this->Customer_details_model->get_transaction_by_id($data['id']);
 
         $this->load->view('transaction/approval_form', $data);
 	}
@@ -92,10 +104,6 @@ class Transaction extends Mandiri_Controller {
     }
 
     public function export(){
-    	date_default_timezone_set('UTC');
-
-		date_default_timezone_set('Asia/Jakarta');
-
 		$spreadsheet = new Spreadsheet();
 
 		$cellStyle = array(
@@ -224,7 +232,8 @@ class Transaction extends Mandiri_Controller {
 		$first_row = 0;
 
 		$last_row = 0;
-		$transaction_list = $this->Customer_details_model->get_transaction($this->input->get());
+		$params = $this->input->get();
+		$transaction_list = $this->Customer_details_model->get_transaction($params);
 
 		for ($b=0; $b < count($transaction_list); $b++) {
 			if($b == 0){
@@ -363,9 +372,12 @@ class Transaction extends Mandiri_Controller {
     	return TRUE;
     }
 
-	private function submit_approval_detail(){
+	private function submit_approval_detail($method = "approve"){
 		$this->form_validation->set_rules('approval_code', 'Approval Code', 'required');
         $this->form_validation->set_rules('invoice_number', 'Invoice Number', 'required');
+		if($this->input->post('payment_type') != null && $this->input->post('payment_type') != "" && $this->input->post('payment_type') == "cicilan"){
+			$this->form_validation->set_rules('installment_period', 'Installment Period', 'required');
+		}
 
 		if ($this->form_validation->run() === FALSE) {
 			$errors = $this->form_validation->error_string(); 
@@ -373,10 +385,16 @@ class Transaction extends Mandiri_Controller {
 		}else{
 			$transactionData = [
                 'approval_code' => $this->input->post('approval_code'),
-                'invoice_number' => $this->input->post('invoice_number'),
-				'installment_period' => ($this->input->post('installment_period') != "" && $this->input->post('installment_period') != null ? $this->input->post('installment_period') : null),
-				'approval_status' => 1
+                'invoice_number' => $this->input->post('invoice_number')
             ];
+
+			if($method == "approve"){
+				$transactionData['approval_status'] = 1;
+			}
+
+			if($this->input->post('installment_period') != "" && $this->input->post('installment_period') != null){
+				$transactionData['installment_period'] = $this->input->post('installment_period');
+			}
 
 			$this->Customer_details_model->update_customer_details($this->input->post('id'), $transactionData);
 

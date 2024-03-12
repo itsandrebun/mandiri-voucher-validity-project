@@ -85,6 +85,8 @@
                                         <?php if($transaction_list[$b]['approval_status'] == null) {?>
                                             <a style="color:green" href="<?php echo base_url().'transaction/approve?id='.$transaction_list[$b]['id_customer_details']?>">Approve</a> | 
                                             <a class="reject_transaction_button" style="color:red" data-url="<?php echo base_url().'transaction/reject?id='.$transaction_list[$b]['id_customer_details'];?>">Reject</a>
+                                        <?php }else if($transaction_list[$b]['approval_status'] == 1){?>
+                                            <a style="color:green" href="<?php echo base_url().'transaction/edit_approval_detail?id='.$transaction_list[$b]['id_customer_details']?>">Edit Approval Detail</a> 
                                         <?php }?>
                                         
                                     </td>
