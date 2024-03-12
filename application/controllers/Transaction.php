@@ -49,9 +49,9 @@ class Transaction extends Mandiri_Controller {
         $data['heading_title'] = 'Approve';
         $data['sidebars'] = $this->get_sidebar();
         $data['sidebar_id'] = $this->sidebar_id;
-		$data['id'] = $this->input->get('id');
+		    $data['id'] = $this->input->get('id');
         $data['params_error'] = $this->input->post();
-		$data['transaction_detail'] = $this->Customer_details_model->get_transaction_by_id($data['id']);
+		    $data['transaction_detail'] = $this->Customer_details_model->get_transaction_by_id($data['id']);
 
         $this->load->view('transaction/approval_form', $data);
 	}
@@ -64,9 +64,9 @@ class Transaction extends Mandiri_Controller {
         $data['heading_title'] = 'Edit Approval Detail';
         $data['sidebars'] = $this->get_sidebar();
         $data['sidebar_id'] = $this->sidebar_id;
-		$data['id'] = $this->input->get('id');
+		    $data['id'] = $this->input->get('id');
         $data['params_error'] = $this->input->post();
-		$data['transaction_detail'] = $this->Customer_details_model->get_transaction_by_id($data['id']);
+		    $data['transaction_detail'] = $this->Customer_details_model->get_transaction_by_id($data['id']);
 
         $this->load->view('transaction/approval_form', $data);
 	}
